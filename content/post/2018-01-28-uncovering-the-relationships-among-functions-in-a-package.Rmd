@@ -1,0 +1,99 @@
+---
+title: Uncovering the relationships among functions in a package
+author: ~
+date: '2018-01-28'
+slug: uncovering-the-relationships-among-functions-in-a-package
+categories:
+  - R
+tags:
+  - networks
+  - data-viz
+  - packages
+  - DiagrammeR
+
+draft: no
+---
+
+For my inaugural post, I thought I'd share a function I wrote that visualizes 
+the relationship between functions in a package. Aside from random curiosity,
+the purpose of this exercise was to understand the internal architecture of 
+an internal package that I was updating at work. The functions are available at
+[this gist](https://gist.github.com/carlbfrederick/b30d861ea80a27fad4e44623c41e0170).
+
+The end results are:
+
+```{r, echo = FALSE}
+devtools::source_gist("b30d861ea80a27fad4e44623c41e0170")
+```
+
+
+The first two functions get the names of the functions from a namespace (using 
+`lsf.str`) and cycles through each to which of the others that it calls.
+
+```{r, echo=TRUE}
+ls_fcns <- function(pkg) {
+  fcns <- unclass(lsf.str(envir = asNamespace(pkg), all = TRUE))
+  return(as.character(fcns))
+}
+
+fcn_deps <- function(pkg) {
+  fcns <- ls_fcns(pkg)
+  out <- data.frame(Function = as.character(),
+                    Dependency_Function = as.character(),
+                    Number_Calls = as.integer())
+  for (i in fcns) {
+    this_fcn <- capture.output(getAnywhere(i))
+    for (j in fcns[-grep(i, fcns)]) {
+      dep_fcns <- grep(paste(j, "\\(", sep=""), this_fcn)
+      if (length(dep_fcns > 0)) {
+        out <- rbind(out,
+                     data.frame(Function = i,
+                                Dependency_Function = j,
+                                Number_Calls = length(dep_fcns)))
+      }
+    }
+  }
+  return(out)
+}
+```
+
+The third function produces the `DiagrammeR` dgr_graph object that can be plotted. It is definitely 
+"hacky" and will throw some errors that I haven't quite ironed out yet.
+
+```{r, echo=TRUE}
+plotFcnDependencies <- function(pkg) {
+  fcns <- ls_fcns(pkg)
+  depFcn <- fcn_deps(pkg)
+
+  depth <- NULL
+
+  for (i in fcns) {
+    try(suppressWarnings(dist <- max(sapply(igraph::shortest_paths(igraph::graph_from_data_frame(depFcn[,1:2]), from = i)$vpath, length))))
+    depth <- c(depth, dist)
+    dist <- 0
+  }
+
+  nodes <- data.frame(nodes = fcns,
+                      type = "",
+                      label = htmltools::htmlEscape(fcns),
+                      depth = depth)
+
+  nodes <- dplyr::arrange(nodes, desc(depth))
+
+
+  out <- DiagrammeR::create_graph(
+    nodes_df = nodes,
+    edges_df = DiagrammeR::create_edges(
+      from = depFcn$Function,
+      to = depFcn$Dependency_Function,
+      rel = "leading_to"
+    ),
+    graph_name = paste(pkg, " (version ", packageVersion(pkg), ") Function Map", sep=""),
+    graph_attrs = c("layout = dot", "rankdir = LR"),
+    node_attrs = "fontsize = 20"
+  )
+
+  return(out)
+}
+```
+
