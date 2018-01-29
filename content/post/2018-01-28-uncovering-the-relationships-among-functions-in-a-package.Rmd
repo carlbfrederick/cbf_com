@@ -22,8 +22,12 @@ an internal package that I was updating at work. The functions are available at
 
 The end results are:
 
-```{r, echo = FALSE}
-#devtools::source_gist("b30d861ea80a27fad4e44623c41e0170")
+```{r, results = 'asis, echo = FALSE, message = FALSE, warning = FALSE}
+suppressMessages(
+  devtools::source_gist("b30d861ea80a27fad4e44623c41e0170", filename = "packageFunctionMap.R")  
+)
+fake <- plotFcnDependencies("merTools")
+fake %>% select_nodes_by_degree(expressions = "deg > 0") %>% transform_to_subgraph_ws %>% render_graph
 ```
 
 
@@ -95,5 +99,9 @@ plotFcnDependencies <- function(pkg) {
 
   return(out)
 }
+```
+
+```{r}
+devtools::session_info()
 ```
 
