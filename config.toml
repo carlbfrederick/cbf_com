@@ -1,5 +1,5 @@
 #theme = "hugo-future-imperfect-master"
-baseURL = "/"
+baseURL = "https://cbf.netlify.com/"
 languageCode = "en-us"
 title = "carl b frederick"
 preserveTaxonomyNames = true
