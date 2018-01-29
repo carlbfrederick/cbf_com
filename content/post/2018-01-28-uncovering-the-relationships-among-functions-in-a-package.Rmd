@@ -22,7 +22,7 @@ an internal package that I was updating at work. The functions are available at
 
 The end results are:
 
-```{r, results = 'asis, echo = FALSE, message = FALSE, warning = FALSE}
+```{r, results = 'asis', echo = FALSE, message = FALSE, warning = FALSE}
 suppressMessages(
   devtools::source_gist("b30d861ea80a27fad4e44623c41e0170", filename = "packageFunctionMap.R")  
 )

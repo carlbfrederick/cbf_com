@@ -14,10 +14,16 @@ tags:
 draft: no
 ---
 
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/viz/viz.js"></script>
+<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/grViz-binding/grViz.js"></script>
 
 
 <p>For my inaugural post, I thought I’d share a function I wrote that visualizes the relationship between functions in a package. Aside from random curiosity, the purpose of this exercise was to understand the internal architecture of an internal package that I was updating at work. The functions are available at <a href="https://gist.github.com/carlbfrederick/b30d861ea80a27fad4e44623c41e0170">this gist</a>.</p>
 <p>The end results are:</p>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph {\n\ngraph [layout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       rankdir = \"LR\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"false\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"averageObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"buildModelMatrix\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"collapseFrame\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"draw.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"easyVarCorr\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"expectedRank\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"famlink\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"fastdisp.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"fastdisp.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"fetch.merMod.msgs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"16\" [label = \"findFormFuns\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"23\" [label = \"mkNewReTrms\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"24\" [label = \"modelFixedEff\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"26\" [label = \"modelRandEffStats\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"29\" [label = \"predictInterval\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"30\" [label = \"print.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"32\" [label = \"randomObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"36\" [label = \"REimpact\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"37\" [label = \"reOnly\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"38\" [label = \"REquantile\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"40\" [label = \"residDF.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"44\" [label = \"RHSForm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"48\" [label = \"setup_parallel\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"51\" [label = \"single_wiggle\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"52\" [label = \"stripAttributes\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"54\" [label = \"subsetList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"55\" [label = \"sum.mm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"57\" [label = \"superFactor\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"1\"->\"16\" \n  \"1\"->\"38\" \n  \"1\"->\"52\" \n  \"1\"->\"54\" \n  \"1\"->\"57\" \n  \"4\"->\"23\" \n  \"4\"->\"37\" \n  \"4\"->\"44\" \n  \"7\"->\"1\" \n  \"7\"->\"32\" \n  \"12\"->\"8\" \n  \"13\"->\"8\" \n  \"13\"->\"24\" \n  \"13\"->\"26\" \n  \"16\"->\"5\" \n  \"29\"->\"4\" \n  \"29\"->\"40\" \n  \"29\"->\"48\" \n  \"30\"->\"24\" \n  \"32\"->\"52\" \n  \"32\"->\"54\" \n  \"32\"->\"57\" \n  \"36\"->\"9\" \n  \"36\"->\"29\" \n  \"51\"->\"57\" \n  \"55\"->\"10\" \n  \"55\"->\"15\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>The first two functions get the names of the functions from a namespace (using <code>lsf.str</code>) and cycles through each to which of the others that it calls.</p>
 <pre class="r"><code>ls_fcns &lt;- function(pkg) {
   fcns &lt;- unclass(lsf.str(envir = asNamespace(pkg), all = TRUE))
@@ -78,3 +84,202 @@ fcn_deps &lt;- function(pkg) {
 
   return(out)
 }</code></pre>
+<pre class="r"><code>devtools::session_info()</code></pre>
+<pre><code>## Session info --------------------------------------------------------------</code></pre>
+<pre><code>##  setting  value                       
+##  version  R version 3.4.2 (2017-09-28)
+##  system   x86_64, mingw32             
+##  ui       RTerm                       
+##  language (EN)                        
+##  collate  English_United States.1252  
+##  tz       America/Chicago             
+##  date     2018-01-29</code></pre>
+<pre><code>## Packages ------------------------------------------------------------------</code></pre>
+<pre><code>##  package      * version    date      
+##  abind          1.4-5      2016-07-21
+##  arm            1.9-3      2016-11-27
+##  assertthat     0.2.0      2017-04-11
+##  backports      1.0.4      2016-10-24
+##  bindr          0.1        2016-11-13
+##  bindrcpp     * 0.2        2017-06-17
+##  blme           1.0-4      2015-06-14
+##  blogdown       0.5        2018-01-29
+##  bookdown       0.6        2018-01-25
+##  brew           1.0-6      2011-04-13
+##  broom          0.4.3      2017-11-20
+##  cellranger     1.1.0      2016-07-27
+##  cli            1.0.0      2017-11-05
+##  coda           0.19-1     2016-12-08
+##  colorspace     1.3-2      2016-12-14
+##  crayon         1.3.4      2017-09-16
+##  curl           2.3        2016-11-24
+##  devtools       1.12.0     2016-06-24
+##  DiagrammeR   * 0.9.3      2018-01-29
+##  digest         0.6.12     2017-01-27
+##  downloader     0.4        2015-07-09
+##  dplyr        * 0.7.4      2017-09-28
+##  DT             0.2        2016-08-09
+##  evaluate       0.10       2016-10-11
+##  forcats      * 0.2.0      2017-01-23
+##  foreign        0.8-69     2017-06-22
+##  ggplot2      * 2.2.1.9000 2017-11-22
+##  glue           1.2.0      2017-10-29
+##  gridExtra      2.3        2017-09-09
+##  gtable         0.2.0      2016-02-26
+##  haven          1.1.0.9000 2017-08-09
+##  hms            0.3        2016-11-22
+##  htmltools      0.3.6      2017-04-28
+##  htmlwidgets    1.0        2018-01-20
+##  httpuv         1.3.5.9002 2018-01-29
+##  httr           1.3.1      2017-08-20
+##  igraph         1.1.2      2017-07-21
+##  influenceR     0.1.0      2015-09-03
+##  jsonlite       1.5        2017-06-01
+##  knitr          1.18       2017-12-27
+##  later          0.6        2017-11-04
+##  lattice        0.20-35    2017-03-25
+##  lazyeval       0.2.1.9000 2017-11-08
+##  lme4           1.1-12     2016-04-16
+##  lubridate      1.7.1      2017-11-03
+##  magrittr       1.5        2014-11-22
+##  MASS           7.3-47     2017-02-26
+##  Matrix         1.2-11     2017-08-21
+##  memoise        1.0.0      2016-01-29
+##  merTools       0.4.0      2017-09-21
+##  mime           0.5        2016-07-07
+##  minqa          1.2.4      2014-10-09
+##  mnormt         1.5-5      2016-10-15
+##  modelr         0.1.1      2017-07-24
+##  munsell        0.4.3      2016-02-13
+##  mvtnorm        1.0-6      2017-03-02
+##  nlme           3.1-131    2017-02-06
+##  nloptr         1.0.4      2014-08-04
+##  pillar         1.1.0      2018-01-14
+##  pkgconfig      2.0.1      2017-03-21
+##  plyr           1.8.4      2016-06-08
+##  promises       0.1.0.9001 2018-01-29
+##  psych          1.7.3.21   2017-03-22
+##  purrr        * 0.2.4.9000 2018-01-29
+##  R6             2.2.2      2017-06-17
+##  RColorBrewer   1.1-2      2014-12-07
+##  Rcpp           0.12.15    2018-01-20
+##  readr        * 1.1.1      2017-05-16
+##  readxl         1.0.0      2017-04-18
+##  reshape2       1.4.2      2016-10-22
+##  rgexf          0.15.3     2015-03-24
+##  rlang          0.1.6      2017-12-21
+##  rmarkdown      1.8        2017-11-17
+##  Rook           1.1-1      2014-10-20
+##  rprojroot      1.1        2016-10-29
+##  rstudioapi     0.7        2017-09-07
+##  rvest          0.3.2      2016-06-17
+##  scales         0.5.0.9000 2017-10-13
+##  shiny          1.0.5      2017-08-23
+##  stringi        1.1.5      2017-04-07
+##  stringr      * 1.2.0      2017-02-18
+##  tibble       * 1.4.2      2018-01-22
+##  tidyr        * 0.7.2      2017-10-16
+##  tidyverse    * 1.2.1      2017-11-14
+##  viridis        0.4.1      2018-01-08
+##  viridisLite    0.2.0      2017-03-24
+##  visNetwork     2.0.3      2018-01-09
+##  withr          2.1.0.9000 2017-11-22
+##  xfun           0.1        2018-01-22
+##  XML            3.98-1.6   2017-03-30
+##  xml2           1.1.1      2017-01-24
+##  xtable         1.8-2      2016-02-05
+##  yaml           2.1.16     2017-12-12
+##  source                                  
+##  CRAN (R 3.4.1)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.2.5)                          
+##  Github (rstudio/blogdown@aa98b32)       
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.2.3)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.2.5)                          
+##  Github (rich-iannone/DiagrammeR@690d529)
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.2)                          
+##  Github (tidyverse/ggplot2@505e4bf)      
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  Github (tidyverse/haven@7f2b479)        
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.3)                          
+##  Github (rstudio/httpuv@c2e9011)         
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.2)                          
+##  Github (hadley/lazyeval@93c455c)        
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  Github (jknowles/merTools@11adab7)      
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.1)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.2.5)                          
+##  Github (rstudio/promises@1597b8c)       
+##  CRAN (R 3.3.3)                          
+##  Github (tidyverse/purrr@62b135a)        
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.2.3)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.2.5)                          
+##  Github (hadley/scales@d767915)          
+##  CRAN (R 3.4.1)                          
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.4.0)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.2)                          
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.4.3)                          
+##  Github (jimhester/withr@fe81c00)        
+##  CRAN (R 3.4.3)                          
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.3.3)                          
+##  CRAN (R 3.2.5)                          
+##  CRAN (R 3.4.3)</code></pre>
