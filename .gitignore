@@ -4,3 +4,7 @@
 .Ruserdata
 
 public/*
+
+content/post/*_cache/*
+
+*.kml
