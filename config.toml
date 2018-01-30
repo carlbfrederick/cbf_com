@@ -1,4 +1,4 @@
-#theme = "hugo-future-imperfect-master"
+theme = "hugo-future-imperfect"
 baseURL = "https://cbf.netlify.com/"
 languageCode = "en-us"
 title = "carl b frederick"
