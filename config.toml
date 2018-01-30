@@ -36,7 +36,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # These are optional params related to the sidebar. They are recommended, but not
   # required for proper functionality. HTML is supported within the params.
 [params.intro]
-  header    = ""
+  header    = " "
 
   paragraph = "A digital space where I discuss R, education and perhaps the occasional homebrewing topic."
 
