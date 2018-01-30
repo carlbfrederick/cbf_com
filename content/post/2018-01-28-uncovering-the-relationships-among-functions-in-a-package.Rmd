@@ -11,7 +11,7 @@ tags:
   - packages
   - DiagrammeR
 
-draft: no
+draft: yes
 ---
 
 For my inaugural post, I thought I'd share a function I wrote that visualizes 
@@ -102,6 +102,6 @@ plotFcnDependencies <- function(pkg) {
 ```
 
 ```{r}
-devtools::session_info()
+sessionInfo()
 ```
 

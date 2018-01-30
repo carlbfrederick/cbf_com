@@ -11,7 +11,7 @@ tags:
   - packages
   - DiagrammeR
 
-draft: no
+draft: yes
 ---
 
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
@@ -84,202 +84,56 @@ fcn_deps &lt;- function(pkg) {
 
   return(out)
 }</code></pre>
-<pre class="r"><code>devtools::session_info()</code></pre>
-<pre><code>## Session info --------------------------------------------------------------</code></pre>
-<pre><code>##  setting  value                       
-##  version  R version 3.4.2 (2017-09-28)
-##  system   x86_64, mingw32             
-##  ui       RTerm                       
-##  language (EN)                        
-##  collate  English_United States.1252  
-##  tz       America/Chicago             
-##  date     2018-01-29</code></pre>
-<pre><code>## Packages ------------------------------------------------------------------</code></pre>
-<pre><code>##  package      * version    date      
-##  abind          1.4-5      2016-07-21
-##  arm            1.9-3      2016-11-27
-##  assertthat     0.2.0      2017-04-11
-##  backports      1.0.4      2016-10-24
-##  bindr          0.1        2016-11-13
-##  bindrcpp     * 0.2        2017-06-17
-##  blme           1.0-4      2015-06-14
-##  blogdown       0.5        2018-01-29
-##  bookdown       0.6        2018-01-25
-##  brew           1.0-6      2011-04-13
-##  broom          0.4.3      2017-11-20
-##  cellranger     1.1.0      2016-07-27
-##  cli            1.0.0      2017-11-05
-##  coda           0.19-1     2016-12-08
-##  colorspace     1.3-2      2016-12-14
-##  crayon         1.3.4      2017-09-16
-##  curl           2.3        2016-11-24
-##  devtools       1.12.0     2016-06-24
-##  DiagrammeR   * 0.9.3      2018-01-29
-##  digest         0.6.12     2017-01-27
-##  downloader     0.4        2015-07-09
-##  dplyr        * 0.7.4      2017-09-28
-##  DT             0.2        2016-08-09
-##  evaluate       0.10       2016-10-11
-##  forcats      * 0.2.0      2017-01-23
-##  foreign        0.8-69     2017-06-22
-##  ggplot2      * 2.2.1.9000 2017-11-22
-##  glue           1.2.0      2017-10-29
-##  gridExtra      2.3        2017-09-09
-##  gtable         0.2.0      2016-02-26
-##  haven          1.1.0.9000 2017-08-09
-##  hms            0.3        2016-11-22
-##  htmltools      0.3.6      2017-04-28
-##  htmlwidgets    1.0        2018-01-20
-##  httpuv         1.3.5.9002 2018-01-29
-##  httr           1.3.1      2017-08-20
-##  igraph         1.1.2      2017-07-21
-##  influenceR     0.1.0      2015-09-03
-##  jsonlite       1.5        2017-06-01
-##  knitr          1.18       2017-12-27
-##  later          0.6        2017-11-04
-##  lattice        0.20-35    2017-03-25
-##  lazyeval       0.2.1.9000 2017-11-08
-##  lme4           1.1-12     2016-04-16
-##  lubridate      1.7.1      2017-11-03
-##  magrittr       1.5        2014-11-22
-##  MASS           7.3-47     2017-02-26
-##  Matrix         1.2-11     2017-08-21
-##  memoise        1.0.0      2016-01-29
-##  merTools       0.4.0      2017-09-21
-##  mime           0.5        2016-07-07
-##  minqa          1.2.4      2014-10-09
-##  mnormt         1.5-5      2016-10-15
-##  modelr         0.1.1      2017-07-24
-##  munsell        0.4.3      2016-02-13
-##  mvtnorm        1.0-6      2017-03-02
-##  nlme           3.1-131    2017-02-06
-##  nloptr         1.0.4      2014-08-04
-##  pillar         1.1.0      2018-01-14
-##  pkgconfig      2.0.1      2017-03-21
-##  plyr           1.8.4      2016-06-08
-##  promises       0.1.0.9001 2018-01-29
-##  psych          1.7.3.21   2017-03-22
-##  purrr        * 0.2.4.9000 2018-01-29
-##  R6             2.2.2      2017-06-17
-##  RColorBrewer   1.1-2      2014-12-07
-##  Rcpp           0.12.15    2018-01-20
-##  readr        * 1.1.1      2017-05-16
-##  readxl         1.0.0      2017-04-18
-##  reshape2       1.4.2      2016-10-22
-##  rgexf          0.15.3     2015-03-24
-##  rlang          0.1.6      2017-12-21
-##  rmarkdown      1.8        2017-11-17
-##  Rook           1.1-1      2014-10-20
-##  rprojroot      1.1        2016-10-29
-##  rstudioapi     0.7        2017-09-07
-##  rvest          0.3.2      2016-06-17
-##  scales         0.5.0.9000 2017-10-13
-##  shiny          1.0.5      2017-08-23
-##  stringi        1.1.5      2017-04-07
-##  stringr      * 1.2.0      2017-02-18
-##  tibble       * 1.4.2      2018-01-22
-##  tidyr        * 0.7.2      2017-10-16
-##  tidyverse    * 1.2.1      2017-11-14
-##  viridis        0.4.1      2018-01-08
-##  viridisLite    0.2.0      2017-03-24
-##  visNetwork     2.0.3      2018-01-09
-##  withr          2.1.0.9000 2017-11-22
-##  xfun           0.1        2018-01-22
-##  XML            3.98-1.6   2017-03-30
-##  xml2           1.1.1      2017-01-24
-##  xtable         1.8-2      2016-02-05
-##  yaml           2.1.16     2017-12-12
-##  source                                  
-##  CRAN (R 3.4.1)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.2.5)                          
-##  Github (rstudio/blogdown@aa98b32)       
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.2.3)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.2.5)                          
-##  Github (rich-iannone/DiagrammeR@690d529)
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.2)                          
-##  Github (tidyverse/ggplot2@505e4bf)      
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  Github (tidyverse/haven@7f2b479)        
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.3)                          
-##  Github (rstudio/httpuv@c2e9011)         
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.2)                          
-##  Github (hadley/lazyeval@93c455c)        
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  Github (jknowles/merTools@11adab7)      
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.1)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.2.5)                          
-##  Github (rstudio/promises@1597b8c)       
-##  CRAN (R 3.3.3)                          
-##  Github (tidyverse/purrr@62b135a)        
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.2.3)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.3.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.2.5)                          
-##  Github (hadley/scales@d767915)          
-##  CRAN (R 3.4.1)                          
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.4.0)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.2)                          
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.4.3)                          
-##  Github (jimhester/withr@fe81c00)        
-##  CRAN (R 3.4.3)                          
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.3.3)                          
-##  CRAN (R 3.2.5)                          
-##  CRAN (R 3.4.3)</code></pre>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## 
+## other attached packages:
+##  [1] bindrcpp_0.2       DiagrammeR_0.9.3   forcats_0.2.0     
+##  [4] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4.9000  
+##  [7] readr_1.1.1        tidyr_0.7.2        tibble_1.4.2      
+## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1   
+## 
+## loaded via a namespace (and not attached):
+##  [1] nlme_3.1-131        lubridate_1.7.1     devtools_1.12.0    
+##  [4] RColorBrewer_1.1-2  httr_1.3.1          rprojroot_1.1      
+##  [7] tools_3.4.2         backports_1.0.4     R6_2.2.2           
+## [10] DT_0.2              lazyeval_0.2.1.9000 colorspace_1.3-2   
+## [13] withr_2.1.0.9000    gridExtra_2.3       mnormt_1.5-5       
+## [16] curl_2.3            compiler_3.4.2      cli_1.0.0          
+## [19] rvest_0.3.2         xml2_1.1.1          influenceR_0.1.0   
+## [22] bookdown_0.6        scales_0.5.0.9000   mvtnorm_1.0-6      
+## [25] psych_1.7.3.21      blme_1.0-4          digest_0.6.12      
+## [28] foreign_0.8-69      minqa_1.2.4         rmarkdown_1.8      
+## [31] pkgconfig_2.0.1     htmltools_0.3.6     lme4_1.1-12        
+## [34] htmlwidgets_1.0     rlang_0.1.6         readxl_1.0.0       
+## [37] rstudioapi_0.7      shiny_1.0.5         bindr_0.1          
+## [40] visNetwork_2.0.3    jsonlite_1.5        rgexf_0.15.3       
+## [43] magrittr_1.5        Matrix_1.2-11       Rcpp_0.12.15       
+## [46] munsell_0.4.3       abind_1.4-5         viridis_0.4.1      
+## [49] stringi_1.1.5       yaml_2.1.16         merTools_0.4.0     
+## [52] MASS_7.3-47         plyr_1.8.4          grid_3.4.2         
+## [55] promises_0.1.0.9001 parallel_3.4.2      crayon_1.3.4       
+## [58] lattice_0.20-35     haven_1.1.0.9000    splines_3.4.2      
+## [61] hms_0.3             knitr_1.18          pillar_1.1.0       
+## [64] igraph_1.1.2        reshape2_1.4.2      XML_3.98-1.6       
+## [67] glue_1.2.0          evaluate_0.10       blogdown_0.5       
+## [70] downloader_0.4      modelr_0.1.1        nloptr_1.0.4       
+## [73] httpuv_1.3.5.9002   cellranger_1.1.0    gtable_0.2.0       
+## [76] assertthat_0.2.0    xfun_0.1            mime_0.5           
+## [79] xtable_1.8-2        broom_0.4.3         later_0.6          
+## [82] coda_0.19-1         viridisLite_0.2.0   arm_1.9-3          
+## [85] memoise_1.0.0       Rook_1.1-1          brew_1.0-6</code></pre>
