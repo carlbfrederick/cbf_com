@@ -1,6 +1,6 @@
 ---
 title: Using R to Create Google Maps
-author: ''
+author: ~
 date: '2018-02-06'
 slug: using-r-to-create-google-maps
 categories: 
@@ -11,7 +11,9 @@ tags:
   - data-viz
   - packages
   - plotKML
-draft: yes
+  
+draft: TRUE
+
 bibliography: bibliography.bib
 ---
 
@@ -46,7 +48,8 @@ library(tidyverse)
 #Download files to temporary directory
 fname <- tempfile(fileext = ".zip")
 dname <- tempdir()
-curl::curl_download("https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip", destfile = fname)
+curl::curl_download("https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip", 
+                    destfile = fname, mode = "wb")
 unzip(fname, exdir = dname)
 
 #Read data into R

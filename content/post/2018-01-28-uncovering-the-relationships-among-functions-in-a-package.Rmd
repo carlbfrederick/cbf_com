@@ -11,7 +11,7 @@ tags:
   - packages
   - DiagrammeR
 
-draft: yes
+draft: TRUE
 ---
 
 For my inaugural post, I thought I'd share a function I wrote that visualizes 

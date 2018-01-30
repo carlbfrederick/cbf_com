@@ -11,7 +11,7 @@ tags:
   - packages
   - DiagrammeR
 
-draft: yes
+draft: TRUE
 ---
 
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
@@ -23,7 +23,7 @@ draft: yes
 <p>For my inaugural post, I thought I’d share a function I wrote that visualizes the relationship between functions in a package. Aside from random curiosity, the purpose of this exercise was to understand the internal architecture of an internal package that I was updating at work. The functions are available at <a href="https://gist.github.com/carlbfrederick/b30d861ea80a27fad4e44623c41e0170">this gist</a>.</p>
 <p>The end results are:</p>
 <div id="htmlwidget-1" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph {\n\ngraph [layout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       rankdir = \"LR\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"false\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"averageObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"buildModelMatrix\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"collapseFrame\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"draw.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"easyVarCorr\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"expectedRank\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"famlink\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"fastdisp.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"fastdisp.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"fetch.merMod.msgs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"16\" [label = \"findFormFuns\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"23\" [label = \"mkNewReTrms\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"24\" [label = \"modelFixedEff\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"26\" [label = \"modelRandEffStats\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"29\" [label = \"predictInterval\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"30\" [label = \"print.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"32\" [label = \"randomObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"36\" [label = \"REimpact\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"37\" [label = \"reOnly\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"38\" [label = \"REquantile\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"40\" [label = \"residDF.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"44\" [label = \"RHSForm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"48\" [label = \"setup_parallel\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"51\" [label = \"single_wiggle\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"52\" [label = \"stripAttributes\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"54\" [label = \"subsetList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"55\" [label = \"sum.mm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"57\" [label = \"superFactor\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"1\"->\"16\" \n  \"1\"->\"38\" \n  \"1\"->\"52\" \n  \"1\"->\"54\" \n  \"1\"->\"57\" \n  \"4\"->\"23\" \n  \"4\"->\"37\" \n  \"4\"->\"44\" \n  \"7\"->\"1\" \n  \"7\"->\"32\" \n  \"12\"->\"8\" \n  \"13\"->\"8\" \n  \"13\"->\"24\" \n  \"13\"->\"26\" \n  \"16\"->\"5\" \n  \"29\"->\"4\" \n  \"29\"->\"40\" \n  \"29\"->\"48\" \n  \"30\"->\"24\" \n  \"32\"->\"52\" \n  \"32\"->\"54\" \n  \"32\"->\"57\" \n  \"36\"->\"9\" \n  \"36\"->\"29\" \n  \"51\"->\"57\" \n  \"55\"->\"10\" \n  \"55\"->\"15\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph {\n\ngraph [layout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       rankdir = \"LR\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"false\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"averageObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"buildModelMatrix\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"collapseFrame\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"draw.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"easyVarCorr\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"expectedRank\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"fastdisp\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"findFormFuns\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"18\" [label = \"mkNewReTrms\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"19\" [label = \"modelFixedEff\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"24\" [label = \"predictInterval\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"25\" [label = \"print.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"26\" [label = \"randomObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"29\" [label = \"REimpact\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"30\" [label = \"reOnly\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"31\" [label = \"REquantile\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"33\" [label = \"residDF.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"37\" [label = \"RHSForm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"41\" [label = \"setup_parallel\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"44\" [label = \"stripAttributes\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"46\" [label = \"subsetList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"47\" [label = \"superFactor\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"51\" [label = \"wiggle\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"1\"->\"12\" \n  \"1\"->\"31\" \n  \"1\"->\"44\" \n  \"1\"->\"46\" \n  \"1\"->\"47\" \n  \"4\"->\"18\" \n  \"4\"->\"30\" \n  \"4\"->\"37\" \n  \"7\"->\"1\" \n  \"7\"->\"26\" \n  \"10\"->\"8\" \n  \"12\"->\"5\" \n  \"24\"->\"4\" \n  \"24\"->\"33\" \n  \"24\"->\"41\" \n  \"25\"->\"19\" \n  \"26\"->\"44\" \n  \"26\"->\"46\" \n  \"26\"->\"47\" \n  \"29\"->\"9\" \n  \"29\"->\"24\" \n  \"51\"->\"47\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>The first two functions get the names of the functions from a namespace (using <code>lsf.str</code>) and cycles through each to which of the others that it calls.</p>
 <pre class="r"><code>ls_fcns &lt;- function(pkg) {
   fcns &lt;- unclass(lsf.str(envir = asNamespace(pkg), all = TRUE))
@@ -85,55 +85,47 @@ fcn_deps &lt;- function(pkg) {
   return(out)
 }</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.2 (2017-09-28)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
-## 
-## Matrix products: default
+<pre><code>## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] methods   stats     graphics  grDevices utils     datasets  base     
 ## 
 ## other attached packages:
-##  [1] bindrcpp_0.2       DiagrammeR_0.9.3   forcats_0.2.0     
-##  [4] stringr_1.2.0      dplyr_0.7.4        purrr_0.2.4.9000  
-##  [7] readr_1.1.1        tidyr_0.7.2        tibble_1.4.2      
-## [10] ggplot2_2.2.1.9000 tidyverse_1.2.1   
+##  [1] bindrcpp_0.2     DiagrammeR_0.9.3 forcats_0.2.0    stringr_1.2.0   
+##  [5] dplyr_0.7.4      purrr_0.2.4      readr_1.1.1      tidyr_0.7.2     
+##  [9] tibble_1.4.1     ggplot2_2.2.1    tidyverse_1.2.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] nlme_3.1-131        lubridate_1.7.1     devtools_1.12.0    
-##  [4] RColorBrewer_1.1-2  httr_1.3.1          rprojroot_1.1      
-##  [7] tools_3.4.2         backports_1.0.4     R6_2.2.2           
-## [10] DT_0.2              lazyeval_0.2.1.9000 colorspace_1.3-2   
-## [13] withr_2.1.0.9000    gridExtra_2.3       mnormt_1.5-5       
-## [16] curl_2.3            compiler_3.4.2      cli_1.0.0          
-## [19] rvest_0.3.2         xml2_1.1.1          influenceR_0.1.0   
-## [22] bookdown_0.6        scales_0.5.0.9000   mvtnorm_1.0-6      
-## [25] psych_1.7.3.21      blme_1.0-4          digest_0.6.12      
-## [28] foreign_0.8-69      minqa_1.2.4         rmarkdown_1.8      
-## [31] pkgconfig_2.0.1     htmltools_0.3.6     lme4_1.1-12        
-## [34] htmlwidgets_1.0     rlang_0.1.6         readxl_1.0.0       
-## [37] rstudioapi_0.7      shiny_1.0.5         bindr_0.1          
-## [40] visNetwork_2.0.3    jsonlite_1.5        rgexf_0.15.3       
-## [43] magrittr_1.5        Matrix_1.2-11       Rcpp_0.12.15       
-## [46] munsell_0.4.3       abind_1.4-5         viridis_0.4.1      
-## [49] stringi_1.1.5       yaml_2.1.16         merTools_0.4.0     
-## [52] MASS_7.3-47         plyr_1.8.4          grid_3.4.2         
-## [55] promises_0.1.0.9001 parallel_3.4.2      crayon_1.3.4       
-## [58] lattice_0.20-35     haven_1.1.0.9000    splines_3.4.2      
-## [61] hms_0.3             knitr_1.18          pillar_1.1.0       
-## [64] igraph_1.1.2        reshape2_1.4.2      XML_3.98-1.6       
-## [67] glue_1.2.0          evaluate_0.10       blogdown_0.5       
-## [70] downloader_0.4      modelr_0.1.1        nloptr_1.0.4       
-## [73] httpuv_1.3.5.9002   cellranger_1.1.0    gtable_0.2.0       
-## [76] assertthat_0.2.0    xfun_0.1            mime_0.5           
-## [79] xtable_1.8-2        broom_0.4.3         later_0.6          
-## [82] coda_0.19-1         viridisLite_0.2.0   arm_1.9-3          
-## [85] memoise_1.0.0       Rook_1.1-1          brew_1.0-6</code></pre>
+##  [1] nlme_3.1-128       lubridate_1.7.1    devtools_1.12.0   
+##  [4] RColorBrewer_1.1-2 httr_1.3.1         rprojroot_1.3-2   
+##  [7] tools_3.3.2        backports_1.1.2    R6_2.2.2          
+## [10] DT_0.2             lazyeval_0.2.0     colorspace_1.3-2  
+## [13] withr_1.0.2        gridExtra_2.3      mnormt_1.5-5      
+## [16] curl_3.1           cli_1.0.0          rvest_0.3.2       
+## [19] xml2_1.1.1         influenceR_0.1.0   bookdown_0.5      
+## [22] scales_0.5.0       mvtnorm_1.0-5      psych_1.7.3.21    
+## [25] blme_1.0-4         digest_0.6.12      foreign_0.8-67    
+## [28] minqa_1.2.4        rmarkdown_1.8      pkgconfig_2.0.1   
+## [31] htmltools_0.3.6    lme4_1.1-12        htmlwidgets_1.0   
+## [34] rlang_0.1.6        readxl_1.0.0       rstudioapi_0.7    
+## [37] shiny_1.0.5        bindr_0.1          visNetwork_2.0.3  
+## [40] jsonlite_1.5       rgexf_0.15.3       magrittr_1.5      
+## [43] Matrix_1.2-7.1     Rcpp_0.12.13       munsell_0.4.3     
+## [46] abind_1.4-5        viridis_0.4.1      stringi_1.1.5     
+## [49] yaml_2.1.16        merTools_0.3.0     MASS_7.3-45       
+## [52] plyr_1.8.4         grid_3.3.2         parallel_3.3.2    
+## [55] crayon_1.3.4       lattice_0.20-34    haven_1.1.0       
+## [58] splines_3.3.2      hms_0.3            knitr_1.18.10     
+## [61] pillar_1.1.0       igraph_1.1.2       reshape2_1.4.2    
+## [64] XML_3.98-1.5       glue_1.2.0         evaluate_0.10.1   
+## [67] blogdown_0.5       downloader_0.4     modelr_0.1.1      
+## [70] nloptr_1.0.4       httpuv_1.3.5       cellranger_1.1.0  
+## [73] gtable_0.2.0       assertthat_0.2.0   xfun_0.1          
+## [76] mime_0.5           xtable_1.8-2       broom_0.4.2       
+## [79] coda_0.19-1        viridisLite_0.2.0  arm_1.9-3         
+## [82] memoise_1.0.0      Rook_1.1-1         brew_1.0-6</code></pre>
