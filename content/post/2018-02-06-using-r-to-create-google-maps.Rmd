@@ -80,7 +80,7 @@ kml_layer.SpatialPolygons(widists,
 kml_close("widists.kml")
 ```
 
-Map is too large as is
+Map is too large as is .. see https://philmikejones.wordpress.com/2015/09/03/dissolve-polygons-in-r/
 
 
 ## References
