@@ -34,26 +34,27 @@ to share with users who are not R users.
 
 ## Create Polygon Frame in R
 
-Wisconsin's Department of Public Instruction has [published shapefiles for 
-district boundaries and school locations](https://dpi.wi.gov/gis/school-district-boundaries/data).
-This post will use the elementary school boundary shapefile. After 
-downloading the, we need to read the file into R using the 
-[`sf`](https://cran.rstudio.com/web/packages/sf/) package:
+<!-- THE FOLLOWING FILE IS TOO BIG -->
+<!-- Wisconsin's Department of Public Instruction has [published shapefiles for  -->
+<!-- district boundaries and school locations](https://dpi.wi.gov/gis/school-district-boundaries/data). -->
+<!-- This post will use the elementary school boundary shapefile. -->
+
+The US Census offers many different shapefiles for download 
+at <https://www.census.gov/geo/maps-data/data/tiger-line.html>. After 
+downloading the 2017 Wisconsin school district shapefile 
+(<ftp://ftp2.census.gov/geo/tiger/TIGER2017/UNSD/tl_2017_55_unsd.zip>) and
+saving it in the "mapdata" folder in the working directory, we need to 
+read the file into R using the 
+[`rgdal`](https://cran.rstudio.com/web/packages/rgdal/) package:
 
 ```{r, message=FALSE, warning = FALSE, cache = TRUE}
 library(sp)
 library(rgdal)
 library(tidyverse)
 
-#Download files to temporary directory
-fname <- tempfile(fileext = ".zip")
-dname <- tempdir()
-curl::curl_download("https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip", 
-                    destfile = fname, mode = "wb")
-unzip(fname, exdir = dname)
-
 #Read data into R
-widists <- readOGR(dname, layer="tl_2013_55_unsd_elsd_harn", verbose = FALSE, stringsAsFactors = FALSE) 
+unzip("mapdata/tl_2017_55_unsd.zip", exdir = "mapdata/")
+widists <- readOGR("mapdata/", layer="tl_2017_55_unsd", verbose = FALSE, stringsAsFactors = FALSE) 
 
 plot(widists)
 ```
@@ -71,7 +72,7 @@ if (!require(plotKML)) {
 library(plotKML)
 
 #Write the district boundaries to a KML file to the working directory
-kml_open("widists.kml")
+kml_open("mapdata/widists.kml")
 kml_layer.SpatialPolygons(widists, 
                           subfolder.name = "Elementary District Boundaries",
                           labels = widists@data$NAME,
@@ -80,7 +81,7 @@ kml_layer.SpatialPolygons(widists,
                           width = 2,
                           colour = "yellow")
 
-kml_close("widists.kml")
+kml_close("mapdata/widists.kml")
 ```
 
 Map is too large as is .. see https://philmikejones.wordpress.com/2015/09/03/dissolve-polygons-in-r/
