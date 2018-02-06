@@ -27,8 +27,10 @@ plot over . There are some helpful tutorials on using
 [a video here](https://www.youtube.com/watch?v=qSVwTj60di8).
 
 This post illustrates how I have implemented the reverse process: creating 
-maps in R and embedding them in Google Maps using the awesome [`plotKML`](https://cran.rstudio.com/web/packages/plotKML/index.html) [@HenglRoudieretal2015]
-package. Specifically, I wanted to create a shareable map that overlaid 
+maps in R and embedding them in Google Maps using the awesome 
+[`plotKML`](https://cran.rstudio.com/web/packages/plotKML/index.html) [@HenglRoudieretal2015] 
+and [`rmapshaper`](https://cran.rstudio.com/web/packages/rmapshaper/index.html) [@TeucherRussell2017]
+packages. Specifically, I wanted to create a shareable map that overlaid 
 Wisconsin school district boundaries onto the regular Google Maps interface 
 to share with users who are not R users.
 
@@ -39,12 +41,10 @@ to share with users who are not R users.
 <!-- district boundaries and school locations](https://dpi.wi.gov/gis/school-district-boundaries/data). -->
 <!-- This post will use the elementary school boundary shapefile. -->
 
-The US Census offers many different shapefiles for download 
-at <https://www.census.gov/geo/maps-data/data/tiger-line.html>. After 
-downloading the 2017 Wisconsin school district shapefile 
-(<ftp://ftp2.census.gov/geo/tiger/TIGER2017/UNSD/tl_2017_55_unsd.zip>) and
-saving it in the "mapdata" folder in the working directory, we need to 
-read the file into R using the 
+Wisconsin's Department of Public Instruction has [published shapefiles for 
+district boundaries and school locations](https://dpi.wi.gov/gis/school-district-boundaries/data).
+This post will use the elementary school boundary shapefile. After 
+downloading the, we need to read the file into R using the 
 [`rgdal`](https://cran.rstudio.com/web/packages/rgdal/) package:
 
 ```{r, message=FALSE, warning = FALSE, cache = TRUE}
@@ -52,9 +52,13 @@ library(sp)
 library(rgdal)
 library(tidyverse)
 
+#Download files to temporary directory
+fname <- tempfile(fileext = ".zip")
+dname <- tempdir()
+curl::curl_download("https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip", destfile = fname)
+unzip(fname, exdir = dname)
 #Read data into R
-unzip("mapdata/tl_2017_55_unsd.zip", exdir = "mapdata/")
-widists <- readOGR("mapdata/", layer="tl_2017_55_unsd", verbose = FALSE, stringsAsFactors = FALSE) 
+widists <- readOGR(dname, layer="tl_2013_55_unsd_elsd_harn", verbose = FALSE, stringsAsFactors = FALSE) 
 
 plot(widists)
 ```
@@ -84,7 +88,32 @@ kml_layer.SpatialPolygons(widists,
 kml_close("mapdata/widists.kml")
 ```
 
-Map is too large as is .. see https://philmikejones.wordpress.com/2015/09/03/dissolve-polygons-in-r/
+Now, this file will open just fine in Google Earth, but unfortunately it is
+too large for sharing via Google Maps. Luckily, we
+
+```{r, message = FALSE, warning = FALSE, cache = TRUE}
+#Install (if needed) and load the package.
+if (!require(rmapshaper)) {
+  install.packages("rmapshaper")
+}
+library(rmapshaper)
+El
+widists_sm <- ms_simplify(widists)
+
+#Write the district boundaries to a KML file to the working directory
+kml_open("mapdata/widists_sm.kml")
+kml_layer.SpatialPolygons(widists_sm, 
+                          subfolder.name = "Elementary District Boundaries",
+                          labels = widists@data$NAME,
+                          outline = TRUE,
+                          alpha = 0,
+                          width = 3,
+                          colour = "yellow")
+
+kml_close("mapdata/widists_sm.kml")
+```
+
+And Voila.  
 
 
 ## References
