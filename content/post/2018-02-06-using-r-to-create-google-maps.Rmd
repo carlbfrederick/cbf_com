@@ -98,7 +98,7 @@ over the 5 MB limit. Luckily, `rmapshaper` provides
 
 via the `ms_simplify()` (among other) function.
 
-```{r, message = FALSE, warning = FALSE, cache = TRUE}
+```{r shrink-map, message = FALSE, warning = FALSE, cache = TRUE}
 library(rmapshaper)
 
 widists_sm <- ms_simplify(widists)
@@ -129,10 +129,10 @@ function including alpha, color and (perhaps?) width that do not appear to have 
 map above. As far as I can tell, this happens upon importing the file into Google Maps. Opening 
 either file in Google Earth will show yellow lines and transparent polygons.
 
-I am sure there are more, so please reach out and let me know.
+I am sure there are more, so please reach out in the <a href = ".#comment-section">comments below</a>.
 
 ## Session Info
-```{r session info, message = FALSE, warning = FALSE, cache = TRUE}
+```{r session-info, message = FALSE, warning = FALSE, cache = TRUE}
 devtools::session_info()
 ```
 
