@@ -7,4 +7,7 @@ public/*
 
 content/post/*_cache/*
 content/post/mapdata/
+
+blogdown/*
+
 *.kml
