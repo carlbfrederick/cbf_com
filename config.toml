@@ -40,7 +40,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
   paragraph = "A digital space where I discuss R, education and perhaps the occasional homebrewing topic."
 
-  about     = "Carl is a sociologist turned education researcher in Wisconsin who takes a bit too much joy in the minutiae of statistical programming."
+  about     = "Carl is a sociologist turned education researcher in Wisconsin who takes a bit too much joy in the minutiae of statistical programming.  Happy to have my R-related posts aggregated on <https://www.r-bloggers.com/>"
 
   # This appears at the top of the sidebar above params.intro.header.
   # A width of less than 100px is recommended from a design perspective.
