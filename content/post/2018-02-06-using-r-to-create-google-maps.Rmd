@@ -1,7 +1,7 @@
 ---
 title: Using R to Create Google Maps
 author: ~
-date: '2018-02-06'
+date: '2018-02-09'
 slug: using-r-to-create-google-maps
 categories: 
   - R
@@ -22,23 +22,28 @@ customize for their own purposes. The
 [`RgoogleMaps`](https://cran.r-project.org/web/packages/RgoogleMaps/) [@LoecherRopkins2015]
 and [`ggmap`](https://cran.r-project.org/web/packages/ggmap/) [@KahleWickham2013]
 packages are great tools to download static map queries from Google maps and 
-plot over . There are some helpful tutorials on using
+plot over them. There are some helpful tutorials on using
 `ggmap` [here](https://rpubs.com/nickbearman/r-google-map-making) and 
 [a video here](https://www.youtube.com/watch?v=qSVwTj60di8).
 
 This post illustrates how I have implemented the reverse process: creating 
-maps in R and embedding them in Google Maps using the awesome [`plotKML`](https://cran.rstudio.com/web/packages/plotKML/index.html) [@HenglRoudieretal2015]
-package. Specifically, I wanted to create a shareable map that overlaid 
+maps in R and embedding them in Google Maps using the awesome 
+[`plotKML`](https://cran.rstudio.com/web/packages/plotKML/index.html) [@HenglRoudieretal2015] 
+and [`rmapshaper`](https://cran.rstudio.com/web/packages/rmapshaper/index.html) [@TeucherRussell2017]
+packages. Specifically, I wanted to create a share-able map that overlaid 
 Wisconsin school district boundaries onto the regular Google Maps interface 
 to share with users who are not R users.
 
-## Create Polygon Frame in R
+## Create SpatialPolygonDataFrame in R
 
 Wisconsin's Department of Public Instruction has [published shapefiles for 
 district boundaries and school locations](https://dpi.wi.gov/gis/school-district-boundaries/data).
 This post will use the elementary school boundary shapefile. After 
-downloading the, we need to read the file into R using the 
-[`sf`](https://cran.rstudio.com/web/packages/sf/) package:
+downloading the file, we need to read the file into R using the 
+[`rgdal`](https://cran.rstudio.com/web/packages/rgdal/) package:[^1]
+
+[^1]: I choose to use `rgdal` instead of the [`sf`](https://cran.rstudio.com/web/packages/sf/) (simple features)
+package because `plotKML` plays better with sp-class objects.
 
 ```{r, message=FALSE, warning = FALSE, cache = TRUE}
 library(sp)
@@ -49,29 +54,26 @@ library(tidyverse)
 fname <- tempfile(fileext = ".zip")
 dname <- tempdir()
 curl::curl_download("https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip", 
-                    destfile = fname, mode = "wb")
+                    destfile = fname)
 unzip(fname, exdir = dname)
-
 #Read data into R
 widists <- readOGR(dname, layer="tl_2013_55_unsd_elsd_harn", verbose = FALSE, stringsAsFactors = FALSE) 
 
 plot(widists)
 ```
 
+## Export to .kml format
+
 This looks about right. The `plotKML` package writes geographic objects to 
 **K**eyhole **M**arkup **L**anguage the format used by Google Maps, among 
 others. The package comes with a handy vignette that I was able to use to do 
 everything that follows.
 
-```{r, message = FALSE, warning = FALSE, cache = TRUE}
-#Install (if needed) and load the package.
-if (!require(plotKML)) {
-  install.packages("plotKML")
-}
+```{r shrink f, message = FALSE, warning = FALSE, cache = TRUE}
 library(plotKML)
 
 #Write the district boundaries to a KML file to the working directory
-kml_open("widists.kml")
+kml_open("mapdata/widists_sm.kml")
 kml_layer.SpatialPolygons(widists, 
                           subfolder.name = "Elementary District Boundaries",
                           labels = widists@data$NAME,
@@ -80,10 +82,58 @@ kml_layer.SpatialPolygons(widists,
                           width = 2,
                           colour = "yellow")
 
-kml_close("widists.kml")
+kml_close("mapdata/widists_sm.kml")
+
+
 ```
 
-Map is too large as is .. see https://philmikejones.wordpress.com/2015/09/03/dissolve-polygons-in-r/
+Now, this file will open just fine in Google Earth, but unfortunately it is
+too large for sharing via Google Maps because, at 
+`r round(file.size("mapdata/widists_sm.kml") / 1024^2, 2)` MB, it is 
+over the 5 MB limit. Luckily, `rmapshaper` provides 
 
+> "a wrapper around the 'mapshaper' 'JavaScript' library by Matthew Bloch 
+> <https://github.com/mbloch/mapshaper/> to perform topologically-aware 
+> polygon simplification."
+
+via the `ms_simplify()` (among other) function.
+
+```{r, message = FALSE, warning = FALSE, cache = TRUE}
+library(rmapshaper)
+
+widists_sm <- ms_simplify(widists)
+
+#Write the district boundaries to a KML file to the working directory
+kml_open("mapdata/widists_sm.kml")
+kml_layer.SpatialPolygons(widists_sm, 
+                          subfolder.name = "Elementary District Boundaries",
+                          labels = widists_sm@data$NAME,
+                          outline = TRUE,
+                          alpha = 0,
+                          width = 3,
+                          colour = "yellow")
+
+kml_close("mapdata/widists_sm.kml")
+```
+
+Voila! The new file is only `r round(file.size("mapdata/widists_sm.kml") / 1024^2, 2)` MB.
+Now, all that is left to do is to login to Google Maps, import the widists_sm.kml file and 
+share it. The results are below:
+
+<iframe src="https://www.google.com/maps/d/u/3/embed?mid=1xFVB_OuvZYaQ-onABVCeEh0yJbte-3BO" width="640" height="480"></iframe>
+
+## (My) Unresolved issues
+
+Observant readers will notice that I specified many options in the `kml_layer.SpatialPolygons()` 
+function including alpha, color and (perhaps?) width that do not appear to have translated to the shared Google
+map above. As far as I can tell, this happens upon importing the file into Google Maps. Opening 
+either file in Google Earth will show yellow lines and transparent polygons.
+
+I am sure there are more, so please reach out and let me know.
+
+## Session Info
+```{r session info, message = FALSE, warning = FALSE, cache = TRUE}
+devtools::session_info()
+```
 
 ## References
