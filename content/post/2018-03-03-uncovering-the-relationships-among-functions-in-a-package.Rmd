@@ -1,0 +1,178 @@
+---
+title: Uncovering the relationships among functions in a package
+author: ~
+date: '2018-03-03'
+slug: uncovering-the-relationships-among-functions-in-a-package
+categories:
+  - R
+tags:
+  - networks
+  - data-viz
+  - packages
+  - DiagrammeR
+
+draft: false
+---
+
+I maintain a few internal R packages that we have at work. Recently, and perhaps
+foolishly, I decided that I needed to totally refactor one of them to add some more
+bells and whistles. A substantial part of this task involved simplifying the 
+internal workflow of the package. I needed to be sure not to omit any of the 
+previous functionality, but a simple list of all the exported and unexported 
+functions was not sufficient.[^1]
+
+[^1]: Also developing this function was a fun way to put off doing the hard work.
+
+So, I decided to map the dependencies between all of the internal functions 
+(e.g. which functions called which). I found it useful, so I thought I'd share 
+a function I wrote that does just that: visualizes the relationships among functions 
+in a package. The functions are available at
+[this gist](https://gist.github.com/carlbfrederick/b30d861ea80a27fad4e44623c41e0170).
+
+
+For the sake of this post, I will use the 
+[`merTools`](https://cran.r-project.org/web/packages/merTools/index.html) package 
+that I have had the pleasure of working on with a great co-author. The end results are:
+
+```{r, results = 'asis', echo = TRUE, message = FALSE, warning = FALSE}
+suppressMessages(
+  devtools::source_gist("b30d861ea80a27fad4e44623c41e0170", filename = "packageFunctionMap.R")  
+)
+fake <- plotFcnDependencies("merTools")
+fake %>% select_nodes_by_degree(expressions = "deg > 0") %>% transform_to_subgraph_ws %>% render_graph
+```
+
+This diagram shows which of the `merTools` functions call other `merTools` functions. Well,
+technically it shows all of the functions that explicitly call other functions. It does 
+**not** include dependencies that are based on the output of other functions and/or 
+functions that do not call other internal functions. The latter would have degree = 0 in 
+social network terms.
+
+Columns to the left are upstream and columns to the right are downstream. For example `REimpact()` 
+calls `expectedRank()` and `predictInterval()`. `predictInterval()` then goes on to 
+call three more functions, etc.  
+
+The practical value of this exercise comes from the following sorts of insights:
+  
+  - `stripAttributes()` is called by both `averageObs()` and `randomObs()`, don't forget 
+    to include that functionality in whatever function(s) replace those two; and
+  - `fastdisp()` is the only function that calls `easyVarCorr()`, perhaps `easyVarCorr()`
+    is a good candidate to be rolled into `fastdisp()` if there are no other use cases 
+    for this function.
+
+## Stepping through the functions
+
+The first function, `ls_fcns()`, retrieves the names of the functions from a namespace (using 
+`lsf.str`) and returns it as a character vector.
+
+```{r ls_fcns, echo=TRUE}
+ls_fcns <- function(pkg) {
+  fcns <- unclass(lsf.str(envir = asNamespace(pkg), all = TRUE))
+  return(as.character(fcns))
+}
+
+ls_fcns("merTools")
+```
+
+The second function, `fcn_deps()`, cycles through each function to and does a regular expression
+search to see which, if any, of the other functions from that namespace are called.
+This part could be written more efficiently, I'm sure, but I was starting to feel
+bad about procrastinating too much.  Feel free to suggest improvements in the 
+comments or via twitter -- [\@carlbfrederick](https://twitter.com/carlbfrederick).
+
+```{r fcn_deps, echo=TRUE}
+fcn_deps <- function(pkg) {
+  fcns <- ls_fcns(pkg)
+  out <- data.frame(Function = as.character(),
+                    Dependency_Function = as.character(),
+                    Number_Calls = as.integer())
+  for (i in fcns) {
+    this_fcn <- capture.output(getAnywhere(i))
+    for (j in fcns[-grep(i, fcns)]) {
+      dep_fcns <- grep(paste(j, "\\(", sep=""), this_fcn)
+      if (length(dep_fcns > 0)) {
+        out <- rbind(out,
+                     data.frame(Function = i,
+                                Dependency_Function = j,
+                                Number_Calls = length(dep_fcns)))
+      }
+    }
+  }
+  return(out)
+}
+
+fcn_deps("merTools") %>% as_data_frame
+```
+
+As you can see, `fcn_deps()` returns a data.frame with three columns: Function, 
+Dependency_Function and Number_Calls. The first two are used to create the diagram.
+I don't recall what I originally intended to do with Number_Calls, but it is
+still there.
+
+The third function, `plotFcnDependencies()`, produces the
+[`DiagrammeR`](https://cran.rstudio.com/web/packages/DiagrammeR/index.html) [@Ianone]  
+object that can be plotted. It is definitely "hacky" and will throw some errors 
+that I haven't quite ironed out yet, hence the `try()` in there.  
+
+The for loop is used to place the functions horizontally in the diagram above
+by calculating the longest of the shortest paths from each function to all the
+others. For example, the longest shortest paths between `draw.MerMod()` and 
+the rest of the functions is 4. I call this quantity depth in the function.
+
+Using this depth quantity, the rest of the function just creates the node and
+edge data.frames and then creates the diagram using the `DiagrammeR` package
+... and voila!
+
+```{r, echo=TRUE}
+plotFcnDependencies <- function(pkg) {
+  fcns <- ls_fcns(pkg)
+  depFcn <- fcn_deps(pkg)
+
+  depth <- NULL
+
+  for (i in fcns) {
+    try(suppressWarnings(dist <- max(sapply(igraph::shortest_paths(igraph::graph_from_data_frame(depFcn[,1:2]), from = i)$vpath, length))))
+    depth <- c(depth, dist)
+    dist <- 0
+  }
+
+  nodes <- data.frame(nodes = fcns,
+                      type = "",
+                      label = htmltools::htmlEscape(fcns),
+                      depth = depth)
+
+  nodes <- dplyr::arrange(nodes, desc(depth))
+
+
+  out <- DiagrammeR::create_graph(
+    nodes_df = nodes,
+    edges_df = DiagrammeR::create_edges(
+      from = depFcn$Function,
+      to = depFcn$Dependency_Function,
+      rel = "leading_to"
+    ),
+    graph_name = paste(pkg, " (version ", packageVersion(pkg), ") Function Map", sep=""),
+    graph_attrs = c("layout = dot", "rankdir = LR"),
+    node_attrs = "fontsize = 20"
+  )
+
+  return(out)
+}
+```
+
+## Advice
+
+Many packages have *a lot* of functions. Mapping an entire package often results in an unreadable
+network diagram. Go ahead an make a diagram of `dplyr` once and you will see what I mean.
+
+## Ideas for further enhancements
+
+  1. Differentiate exported functions from unexported functions.
+  2. Add an argument to focus on certain function(s) to focus the diagram on the area of interest. 
+
+Thanks for reading! Feel free to join the discussion below.
+
+```{r}
+devtools::session_info()
+```
+
