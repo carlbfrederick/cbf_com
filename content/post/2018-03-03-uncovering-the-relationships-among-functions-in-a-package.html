@@ -1,0 +1,357 @@
+---
+title: Uncovering the relationships among functions in a package
+author: ~
+date: '2018-03-03'
+slug: uncovering-the-relationships-among-functions-in-a-package
+categories:
+  - R
+tags:
+  - networks
+  - data-viz
+  - packages
+  - DiagrammeR
+
+draft: false
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/viz/viz.js"></script>
+<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/grViz-binding/grViz.js"></script>
+
+
+<p>I maintain a few internal R packages that we have at work. Recently, and perhaps foolishly, I decided that I needed to totally refactor one of them to add some more bells and whistles. A substantial part of this task involved simplifying the internal workflow of the package. I needed to be sure not to omit any of the previous functionality, but a simple list of all the exported and unexported functions was not sufficient.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>So, I decided to map the dependencies between all of the internal functions (e.g. which functions called which). I found it useful, so I thought I’d share a function I wrote that does just that: visualizes the relationships among functions in a package. The functions are available at <a href="https://gist.github.com/carlbfrederick/b30d861ea80a27fad4e44623c41e0170">this gist</a>.</p>
+<p>For the sake of this post, I will use the <a href="https://cran.r-project.org/web/packages/merTools/index.html"><code>merTools</code></a> package that I have had the pleasure of working on with a great co-author. The end results are:</p>
+<pre class="r"><code>suppressMessages(
+  devtools::source_gist(&quot;b30d861ea80a27fad4e44623c41e0170&quot;, filename = &quot;packageFunctionMap.R&quot;)  
+)
+fake &lt;- plotFcnDependencies(&quot;merTools&quot;)
+fake %&gt;% select_nodes_by_degree(expressions = &quot;deg &gt; 0&quot;) %&gt;% transform_to_subgraph_ws %&gt;% render_graph</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"digraph {\n\ngraph [layout = \"dot\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\",\n       rankdir = \"LR\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"false\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"averageObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"buildModelMatrix\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"collapseFrame\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"draw.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"easyVarCorr\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"expectedRank\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"fastdisp\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"findFormFuns\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"18\" [label = \"mkNewReTrms\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"19\" [label = \"modelFixedEff\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"24\" [label = \"predictInterval\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"25\" [label = \"print.merModList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"26\" [label = \"randomObs\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"29\" [label = \"REimpact\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"30\" [label = \"reOnly\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"31\" [label = \"REquantile\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"33\" [label = \"residDF.merMod\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"37\" [label = \"RHSForm\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"41\" [label = \"setup_parallel\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"44\" [label = \"stripAttributes\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"46\" [label = \"subsetList\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"47\" [label = \"superFactor\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"51\" [label = \"wiggle\", fontsize = \"20\", shape = \"rectangle\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"1\"->\"12\" \n  \"1\"->\"31\" \n  \"1\"->\"44\" \n  \"1\"->\"46\" \n  \"1\"->\"47\" \n  \"4\"->\"18\" \n  \"4\"->\"30\" \n  \"4\"->\"37\" \n  \"7\"->\"1\" \n  \"7\"->\"26\" \n  \"10\"->\"8\" \n  \"12\"->\"5\" \n  \"24\"->\"4\" \n  \"24\"->\"33\" \n  \"24\"->\"41\" \n  \"25\"->\"19\" \n  \"26\"->\"44\" \n  \"26\"->\"46\" \n  \"26\"->\"47\" \n  \"29\"->\"9\" \n  \"29\"->\"24\" \n  \"51\"->\"47\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>This diagram shows which of the <code>merTools</code> functions call other <code>merTools</code> functions. Well, technically it shows all of the functions that explicitly call other functions. It does <strong>not</strong> include dependencies that are based on the output of other functions and/or functions that do not call other internal functions. The latter would have degree = 0 in social network terms.</p>
+<p>Columns to the left are upstream and columns to the right are downstream. For example <code>REimpact()</code> calls <code>expectedRank()</code> and <code>predictInterval()</code>. <code>predictInterval()</code> then goes on to call three more functions, etc.</p>
+<p>The practical value of this exercise comes from the following sorts of insights:</p>
+<ul>
+<li><code>stripAttributes()</code> is called by both <code>averageObs()</code> and <code>randomObs()</code>, don’t forget to include that functionality in whatever function(s) replace those two; and</li>
+<li><code>fastdisp()</code> is the only function that calls <code>easyVarCorr()</code>, perhaps <code>easyVarCorr()</code> is a good candidate to be rolled into <code>fastdisp()</code> if there are no other use cases for this function.</li>
+</ul>
+<div id="stepping-through-the-functions" class="section level2">
+<h2>Stepping through the functions</h2>
+<p>The first function, <code>ls_fcns()</code>, retrieves the names of the functions from a namespace (using <code>lsf.str</code>) and returns it as a character vector.</p>
+<pre class="r"><code>ls_fcns &lt;- function(pkg) {
+  fcns &lt;- unclass(lsf.str(envir = asNamespace(pkg), all = TRUE))
+  return(as.character(fcns))
+}
+
+ls_fcns(&quot;merTools&quot;)</code></pre>
+<pre><code>##  [1] &quot;averageObs&quot;         &quot;bglmerModList&quot;      &quot;blmerModList&quot;      
+##  [4] &quot;buildModelMatrix&quot;   &quot;collapseFrame&quot;      &quot;draw&quot;              
+##  [7] &quot;draw.merMod&quot;        &quot;easyVarCorr&quot;        &quot;expectedRank&quot;      
+## [10] &quot;fastdisp&quot;           &quot;FEsim&quot;              &quot;findFormFuns&quot;      
+## [13] &quot;formulaBuild&quot;       &quot;glmerModList&quot;       &quot;ICC&quot;               
+## [16] &quot;levelfun&quot;           &quot;lmerModList&quot;        &quot;mkNewReTrms&quot;       
+## [19] &quot;modelFixedEff&quot;      &quot;modelInfo&quot;          &quot;modelRandEffStats&quot; 
+## [22] &quot;plotFEsim&quot;          &quot;plotREsim&quot;          &quot;predictInterval&quot;   
+## [25] &quot;print.merModList&quot;   &quot;randomObs&quot;          &quot;REcorrExtract&quot;     
+## [28] &quot;REextract&quot;          &quot;REimpact&quot;           &quot;reOnly&quot;            
+## [31] &quot;REquantile&quot;         &quot;REsdExtract&quot;        &quot;residDF.merMod&quot;    
+## [34] &quot;REsim&quot;              &quot;reTermCount&quot;        &quot;reTermNames&quot;       
+## [37] &quot;RHSForm&quot;            &quot;RMSE.merMod&quot;        &quot;safeDeparse&quot;       
+## [40] &quot;sanitizeNames&quot;      &quot;setup_parallel&quot;     &quot;shinyMer&quot;          
+## [43] &quot;shuffle&quot;            &quot;stripAttributes&quot;    &quot;subBoot&quot;           
+## [46] &quot;subsetList&quot;         &quot;superFactor&quot;        &quot;thetaExtract&quot;      
+## [49] &quot;trimModelFrame&quot;     &quot;VarCorr.merModList&quot; &quot;wiggle&quot;            
+## [52] &quot;zzz&quot;</code></pre>
+<p>The second function, <code>fcn_deps()</code>, cycles through each function to and does a regular expression search to see which, if any, of the other functions from that namespace are called. This part could be written more efficiently, I’m sure, but I was starting to feel bad about procrastinating too much. Feel free to suggest improvements in the comments or via twitter – <a href="https://twitter.com/carlbfrederick">@carlbfrederick</a>.</p>
+<pre class="r"><code>fcn_deps &lt;- function(pkg) {
+  fcns &lt;- ls_fcns(pkg)
+  out &lt;- data.frame(Function = as.character(),
+                    Dependency_Function = as.character(),
+                    Number_Calls = as.integer())
+  for (i in fcns) {
+    this_fcn &lt;- capture.output(getAnywhere(i))
+    for (j in fcns[-grep(i, fcns)]) {
+      dep_fcns &lt;- grep(paste(j, &quot;\\(&quot;, sep=&quot;&quot;), this_fcn)
+      if (length(dep_fcns &gt; 0)) {
+        out &lt;- rbind(out,
+                     data.frame(Function = i,
+                                Dependency_Function = j,
+                                Number_Calls = length(dep_fcns)))
+      }
+    }
+  }
+  return(out)
+}
+
+fcn_deps(&quot;merTools&quot;) %&gt;% as_data_frame</code></pre>
+<pre><code>## # A tibble: 22 x 3
+##    Function         Dependency_Function Number_Calls
+##  * &lt;fct&gt;            &lt;fct&gt;                      &lt;int&gt;
+##  1 averageObs       findFormFuns                   1
+##  2 averageObs       REquantile                     1
+##  3 averageObs       stripAttributes                1
+##  4 averageObs       subsetList                     2
+##  5 averageObs       superFactor                    1
+##  6 buildModelMatrix mkNewReTrms                    1
+##  7 buildModelMatrix reOnly                         1
+##  8 buildModelMatrix RHSForm                        1
+##  9 draw.merMod      averageObs                     1
+## 10 draw.merMod      randomObs                      1
+## # ... with 12 more rows</code></pre>
+<p>As you can see, <code>fcn_deps()</code> returns a data.frame with three columns: Function, Dependency_Function and Number_Calls. The first two are used to create the diagram. I don’t recall what I originally intended to do with Number_Calls, but it is still there.</p>
+<p>The third function, <code>plotFcnDependencies()</code>, produces the <a href="https://cran.rstudio.com/web/packages/DiagrammeR/index.html"><code>DiagrammeR</code></a> <span class="citation">[@Ianone]</span><br />
+object that can be plotted. It is definitely “hacky” and will throw some errors that I haven’t quite ironed out yet, hence the <code>try()</code> in there.</p>
+<p>The for loop is used to place the functions horizontally in the diagram above by calculating the longest of the shortest paths from each function to all the others. For example, the longest shortest paths between <code>draw.MerMod()</code> and the rest of the functions is 4. I call this quantity depth in the function.</p>
+<p>Using this depth quantity, the rest of the function just creates the node and edge data.frames and then creates the diagram using the <code>DiagrammeR</code> package … and voila!</p>
+<pre class="r"><code>plotFcnDependencies &lt;- function(pkg) {
+  fcns &lt;- ls_fcns(pkg)
+  depFcn &lt;- fcn_deps(pkg)
+
+  depth &lt;- NULL
+
+  for (i in fcns) {
+    try(suppressWarnings(dist &lt;- max(sapply(igraph::shortest_paths(igraph::graph_from_data_frame(depFcn[,1:2]), from = i)$vpath, length))))
+    depth &lt;- c(depth, dist)
+    dist &lt;- 0
+  }
+
+  nodes &lt;- data.frame(nodes = fcns,
+                      type = &quot;&quot;,
+                      label = htmltools::htmlEscape(fcns),
+                      depth = depth)
+
+  nodes &lt;- dplyr::arrange(nodes, desc(depth))
+
+
+  out &lt;- DiagrammeR::create_graph(
+    nodes_df = nodes,
+    edges_df = DiagrammeR::create_edges(
+      from = depFcn$Function,
+      to = depFcn$Dependency_Function,
+      rel = &quot;leading_to&quot;
+    ),
+    graph_name = paste(pkg, &quot; (version &quot;, packageVersion(pkg), &quot;) Function Map&quot;, sep=&quot;&quot;),
+    graph_attrs = c(&quot;layout = dot&quot;, &quot;rankdir = LR&quot;),
+    node_attrs = &quot;fontsize = 20&quot;
+  )
+
+  return(out)
+}</code></pre>
+</div>
+<div id="advice" class="section level2">
+<h2>Advice</h2>
+<p>Many packages have <em>a lot</em> of functions. Mapping an entire package often results in an unreadable network diagram. Go ahead an make a diagram of <code>dplyr</code> once and you will see what I mean.</p>
+</div>
+<div id="ideas-for-further-enhancements" class="section level2">
+<h2>Ideas for further enhancements</h2>
+<ol style="list-style-type: decimal">
+<li>Differentiate exported functions from unexported functions.</li>
+<li>Add an argument to focus on certain function(s) to focus the diagram on the area of interest.</li>
+</ol>
+<p>Thanks for reading! Feel free to join the discussion below.</p>
+<pre class="r"><code>devtools::session_info()</code></pre>
+<pre><code>## Session info --------------------------------------------------------------</code></pre>
+<pre><code>##  setting  value                       
+##  version  R version 3.3.2 (2016-10-31)
+##  system   x86_64, darwin13.4.0        
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_US.UTF-8                 
+##  tz       &lt;NA&gt;                        
+##  date     2018-03-03</code></pre>
+<pre><code>## Packages ------------------------------------------------------------------</code></pre>
+<pre><code>##  package      * version  date      
+##  abind          1.4-5    2016-07-21
+##  arm            1.9-3    2016-11-27
+##  assertthat     0.2.0    2017-04-11
+##  backports      1.1.2    2017-12-13
+##  bindr          0.1      2016-11-13
+##  bindrcpp     * 0.2      2017-06-17
+##  blme           1.0-4    2015-06-14
+##  blogdown       0.5      2018-01-28
+##  bookdown       0.5      2017-08-20
+##  brew           1.0-6    2011-04-13
+##  broom          0.4.2    2017-02-13
+##  cellranger     1.1.0    2016-07-27
+##  cli            1.0.0    2017-11-05
+##  coda           0.19-1   2016-12-08
+##  colorspace     1.3-2    2016-12-14
+##  crayon         1.3.4    2017-09-16
+##  curl           3.1      2018-01-30
+##  devtools       1.12.0   2016-06-24
+##  DiagrammeR   * 0.9.3    2018-01-30
+##  digest         0.6.12   2017-01-27
+##  downloader     0.4      2015-07-09
+##  dplyr        * 0.7.4    2017-09-28
+##  DT             0.2      2016-08-09
+##  evaluate       0.10.1   2017-06-24
+##  forcats      * 0.2.0    2017-01-23
+##  foreign        0.8-67   2016-09-13
+##  ggplot2      * 2.2.1    2016-12-30
+##  glue           1.2.0    2017-10-29
+##  gridExtra      2.3      2017-09-09
+##  gtable         0.2.0    2016-02-26
+##  haven          1.1.0    2017-07-09
+##  hms            0.3      2016-11-22
+##  htmltools      0.3.6    2017-04-28
+##  htmlwidgets    1.0      2018-01-20
+##  httpuv         1.3.5    2017-07-04
+##  httr           1.3.1    2017-08-20
+##  igraph         1.1.2    2017-07-21
+##  influenceR     0.1.0    2015-09-03
+##  jsonlite       1.5      2017-06-01
+##  knitr          1.18.10  2018-01-28
+##  lattice        0.20-34  2016-09-06
+##  lazyeval       0.2.0    2016-06-12
+##  lme4           1.1-12   2016-04-16
+##  lubridate      1.7.1    2017-11-03
+##  magrittr       1.5      2014-11-22
+##  MASS           7.3-45   2016-04-21
+##  Matrix         1.2-7.1  2016-09-01
+##  memoise        1.0.0    2016-01-29
+##  merTools       0.3.0    2016-12-12
+##  mime           0.5      2016-07-07
+##  minqa          1.2.4    2014-10-09
+##  mnormt         1.5-5    2016-10-15
+##  modelr         0.1.1    2017-07-24
+##  munsell        0.4.3    2016-02-13
+##  mvtnorm        1.0-5    2016-02-02
+##  nlme           3.1-128  2016-05-10
+##  nloptr         1.0.4    2014-08-04
+##  pillar         1.1.0    2018-01-14
+##  pkgconfig      2.0.1    2017-03-21
+##  plyr           1.8.4    2016-06-08
+##  psych          1.7.3.21 2017-03-22
+##  purrr        * 0.2.4    2017-10-18
+##  R6             2.2.2    2017-06-17
+##  RColorBrewer   1.1-2    2014-12-07
+##  Rcpp           0.12.13  2017-09-28
+##  readr        * 1.1.1    2017-05-16
+##  readxl         1.0.0    2017-04-18
+##  reshape2       1.4.2    2016-10-22
+##  rgexf          0.15.3   2015-03-24
+##  rlang          0.1.6    2017-12-21
+##  rmarkdown      1.8      2017-11-17
+##  Rook           1.1-1    2014-10-20
+##  rprojroot      1.3-2    2018-01-03
+##  rstudioapi     0.7      2017-09-07
+##  rvest          0.3.2    2016-06-17
+##  scales         0.5.0    2017-08-24
+##  shiny          1.0.5    2017-08-23
+##  stringi        1.1.5    2017-04-07
+##  stringr      * 1.2.0    2017-02-18
+##  tibble       * 1.4.1    2017-12-25
+##  tidyr        * 0.7.2    2017-10-16
+##  tidyverse    * 1.2.1    2017-11-14
+##  utf8           1.1.3    2018-01-03
+##  viridis        0.4.1    2018-01-08
+##  viridisLite    0.2.0    2017-03-24
+##  visNetwork     2.0.3    2018-01-09
+##  withr          1.0.2    2016-06-20
+##  xfun           0.1      2018-01-22
+##  XML            3.98-1.5 2016-11-10
+##  xml2           1.1.1    2017-01-24
+##  xtable         1.8-2    2016-02-05
+##  yaml           2.1.16   2017-12-12
+##  source                                  
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@0.2.0)                           
+##  cran (@1.1.2)                           
+##  cran (@0.1)                             
+##  cran (@0.2)                             
+##  CRAN (R 3.3.0)                          
+##  Github (rstudio/blogdown@aa98b32)       
+##  cran (@0.5)                             
+##  CRAN (R 3.3.0)                          
+##  cran (@0.4.2)                           
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  local                                   
+##  CRAN (R 3.3.0)                          
+##  Github (rich-iannone/DiagrammeR@9d6a8e2)
+##  cran (@0.6.12)                          
+##  CRAN (R 3.3.0)                          
+##  cran (@0.7.4)                           
+##  CRAN (R 3.3.0)                          
+##  cran (@0.10.1)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@2.2.1)                           
+##  CRAN (R 3.3.2)                          
+##  cran (@2.3)                             
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@0.3.6)                           
+##  CRAN (R 3.3.2)                          
+##  cran (@1.3.5)                           
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  cran (@1.5)                             
+##  Github (yihui/knitr@1bdaf39)            
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@2.0.1)                           
+##  CRAN (R 3.3.0)                          
+##  cran (@1.7.3.2)                         
+##  CRAN (R 3.3.2)                          
+##  cran (@2.2.2)                           
+##  CRAN (R 3.3.0)                          
+##  cran (@0.12.13)                         
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@1.8)                             
+##  CRAN (R 3.3.0)                          
+##  cran (@1.3-2)                           
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  cran (@0.5.0)                           
+##  cran (@1.0.5)                           
+##  cran (@1.1.5)                           
+##  cran (@1.2.0)                           
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  cran (@0.2.0)                           
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.2)                          
+##  CRAN (R 3.3.0)                          
+##  cran (@2.1.16)</code></pre>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Also developing this function was a fun way to put off doing the hard work.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>

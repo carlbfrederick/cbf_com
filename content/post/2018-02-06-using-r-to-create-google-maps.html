@@ -1,0 +1,233 @@
+---
+title: Using R to Create Google Maps
+author: ~
+date: '2018-02-09'
+slug: using-r-to-create-google-maps
+categories: 
+  - R
+tags:
+  - maps
+  - Google
+  - data-viz
+  - packages
+  - plotKML
+  
+draft: FALSE
+
+bibliography: bibliography.bib
+---
+
+
+
+<p>Google maps are a great way to share maps that users can interact with and customize for their own purposes. The <a href="https://cran.r-project.org/web/packages/RgoogleMaps/"><code>RgoogleMaps</code></a> <span class="citation">(Loecher and Ropkins 2015)</span> and <a href="https://cran.r-project.org/web/packages/ggmap/"><code>ggmap</code></a> <span class="citation">(Kahle and Wickham 2013)</span> packages are great tools to download static map queries from Google maps and plot over them. There are some helpful tutorials on using <code>ggmap</code> <a href="https://rpubs.com/nickbearman/r-google-map-making">here</a> and <a href="https://www.youtube.com/watch?v=qSVwTj60di8">a video here</a>.</p>
+<p>This post illustrates how I have implemented the reverse process: creating maps in R and embedding them in Google Maps using the awesome <a href="https://cran.rstudio.com/web/packages/plotKML/index.html"><code>plotKML</code></a> <span class="citation">(Hengl et al. 2015)</span> and <a href="https://cran.rstudio.com/web/packages/rmapshaper/index.html"><code>rmapshaper</code></a> <span class="citation">(Teucher and Russell 2017)</span> packages. Specifically, I wanted to create a share-able map that overlaid Wisconsin school district boundaries onto the regular Google Maps interface to share with users who are not R users.</p>
+<div id="create-spatialpolygondataframe-in-r" class="section level2">
+<h2>Create SpatialPolygonDataFrame in R</h2>
+<p>Wisconsin’s Department of Public Instruction has <a href="https://dpi.wi.gov/gis/school-district-boundaries/data">published shapefiles for district boundaries and school locations</a>. This post will use the elementary school boundary shapefile. After downloading the file, we need to read the file into R using the <a href="https://cran.rstudio.com/web/packages/rgdal/"><code>rgdal</code></a> package:<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<pre class="r"><code>library(sp)
+library(rgdal)
+library(tidyverse)
+
+#Download files to temporary directory
+fname &lt;- tempfile(fileext = &quot;.zip&quot;)
+dname &lt;- tempdir()
+curl::curl_download(&quot;https://dpi.wi.gov/sites/default/files/imce/gis/spatialdata/tl_2013_55_unsd_elsd_harn.zip&quot;, 
+                    destfile = fname)
+unzip(fname, exdir = dname)
+#Read data into R
+widists &lt;- readOGR(dname, layer=&quot;tl_2013_55_unsd_elsd_harn&quot;, verbose = FALSE, stringsAsFactors = FALSE) 
+
+plot(widists)</code></pre>
+<p><img src="/post/2018-02-06-using-r-to-create-google-maps_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="export-to-.kml-format" class="section level2">
+<h2>Export to .kml format</h2>
+<p>This looks about right. The <code>plotKML</code> package writes geographic objects to <strong>K</strong>eyhole <strong>M</strong>arkup <strong>L</strong>anguage the format used by Google Maps, among others. The package comes with a handy vignette that I was able to use to do everything that follows.</p>
+<pre class="r"><code>library(plotKML)
+
+#Write the district boundaries to a KML file to the working directory
+kml_open(&quot;mapdata/widists_sm.kml&quot;)
+kml_layer.SpatialPolygons(widists, 
+                          subfolder.name = &quot;Elementary District Boundaries&quot;,
+                          labels = widists@data$NAME,
+                          outline = TRUE,
+                          alpha = 0,
+                          width = 2,
+                          colour = &quot;yellow&quot;)
+
+kml_close(&quot;mapdata/widists_sm.kml&quot;)</code></pre>
+<p>Now, this file will open just fine in Google Earth, but unfortunately it is too large for sharing via Google Maps because, at 1.6 MB, it is over the 5 MB limit. Luckily, <code>rmapshaper</code> provides</p>
+<blockquote>
+<p>“a wrapper around the ‘mapshaper’ ‘JavaScript’ library by Matthew Bloch <a href="https://github.com/mbloch/mapshaper/" class="uri">https://github.com/mbloch/mapshaper/</a> to perform topologically-aware polygon simplification.”</p>
+</blockquote>
+<p>via the <code>ms_simplify()</code> (among other) function.</p>
+<pre class="r"><code>library(rmapshaper)
+
+widists_sm &lt;- ms_simplify(widists)
+
+#Write the district boundaries to a KML file to the working directory
+kml_open(&quot;mapdata/widists_sm.kml&quot;)
+kml_layer.SpatialPolygons(widists_sm, 
+                          subfolder.name = &quot;Elementary District Boundaries&quot;,
+                          labels = widists_sm@data$NAME,
+                          outline = TRUE,
+                          alpha = 0,
+                          width = 3,
+                          colour = &quot;yellow&quot;)
+
+kml_close(&quot;mapdata/widists_sm.kml&quot;)</code></pre>
+<p>Voila! The new file is only 1.6 MB. Now, all that is left to do is to login to Google Maps, import the widists_sm.kml file and share it. The results are below:</p>
+<iframe src="https://www.google.com/maps/d/u/3/embed?mid=1xFVB_OuvZYaQ-onABVCeEh0yJbte-3BO" width="640" height="480">
+</iframe>
+</div>
+<div id="my-unresolved-issues" class="section level2">
+<h2>(My) Unresolved issues</h2>
+<p>Observant readers will notice that I specified many options in the <code>kml_layer.SpatialPolygons()</code> function including alpha, color and (perhaps?) width that do not appear to have translated to the shared Google map above. As far as I can tell, this happens upon importing the file into Google Maps. Opening either file in Google Earth will show yellow lines and transparent polygons.</p>
+<p>I am sure there are more, so please reach out in the <a href = ".#comment-section">comments below</a>.</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>devtools::session_info()</code></pre>
+<pre><code>##  setting  value                       
+##  version  R version 3.3.2 (2016-10-31)
+##  system   x86_64, darwin13.4.0        
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_US.UTF-8                 
+##  tz       &lt;NA&gt;                        
+##  date     2018-02-09                  
+## 
+##  package      * version  date       source                           
+##  acepack        1.4.1    2016-10-29 CRAN (R 3.3.0)                   
+##  aqp            1.15     2017-11-12 CRAN (R 3.3.2)                   
+##  assertthat     0.2.0    2017-04-11 cran (@0.2.0)                    
+##  backports      1.1.2    2017-12-13 cran (@1.1.2)                    
+##  base64         2.0      2016-05-10 CRAN (R 3.3.0)                   
+##  bindr          0.1      2016-11-13 cran (@0.1)                      
+##  bindrcpp       0.2      2017-06-17 cran (@0.2)                      
+##  blogdown       0.5      2018-01-28 Github (rstudio/blogdown@aa98b32)
+##  bookdown       0.5      2017-08-20 cran (@0.5)                      
+##  broom          0.4.2    2017-02-13 cran (@0.4.2)                    
+##  cellranger     1.1.0    2016-07-27 CRAN (R 3.3.0)                   
+##  class          7.3-14   2015-08-30 CRAN (R 3.3.2)                   
+##  classInt       0.1-24   2017-04-16 CRAN (R 3.3.2)                   
+##  cli            1.0.0    2017-11-05 CRAN (R 3.3.2)                   
+##  cluster        2.0.5    2016-10-08 CRAN (R 3.3.2)                   
+##  codetools      0.2-15   2016-10-05 CRAN (R 3.3.2)                   
+##  colorRamps     2.3      2012-10-29 CRAN (R 3.3.0)                   
+##  colorspace     1.3-2    2016-12-14 CRAN (R 3.3.2)                   
+##  crayon         1.3.4    2017-09-16 CRAN (R 3.3.2)                   
+##  curl           3.1      2018-01-30 local                            
+##  data.table     1.10.0   2016-12-03 CRAN (R 3.3.2)                   
+##  devtools       1.12.0   2016-06-24 CRAN (R 3.3.0)                   
+##  digest         0.6.12   2017-01-27 cran (@0.6.12)                   
+##  dismo          1.1-4    2017-01-09 CRAN (R 3.3.2)                   
+##  dplyr        * 0.7.4    2017-09-28 cran (@0.7.4)                    
+##  e1071          1.6-7    2015-08-05 CRAN (R 3.3.0)                   
+##  evaluate       0.10.1   2017-06-24 cran (@0.10.1)                   
+##  FNN            1.1      2013-07-31 CRAN (R 3.3.0)                   
+##  forcats      * 0.2.0    2017-01-23 CRAN (R 3.3.2)                   
+##  foreign        0.8-67   2016-09-13 CRAN (R 3.3.2)                   
+##  Formula        1.2-1    2015-04-07 CRAN (R 3.3.0)                   
+##  geojson        0.2.0    2017-11-08 CRAN (R 3.3.2)                   
+##  geojsonio      0.5.0    2017-11-10 CRAN (R 3.3.2)                   
+##  geojsonlint    0.2.0    2016-11-03 CRAN (R 3.3.0)                   
+##  ggplot2      * 2.2.1    2016-12-30 cran (@2.2.1)                    
+##  glue           1.2.0    2017-10-29 CRAN (R 3.3.2)                   
+##  gridExtra      2.3      2017-09-09 cran (@2.3)                      
+##  gstat          1.1-5    2017-03-12 CRAN (R 3.3.2)                   
+##  gtable         0.2.0    2016-02-26 CRAN (R 3.3.0)                   
+##  haven          1.1.0    2017-07-09 CRAN (R 3.3.2)                   
+##  Hmisc          4.0-1    2016-12-08 CRAN (R 3.3.2)                   
+##  hms            0.3      2016-11-22 CRAN (R 3.3.2)                   
+##  htmlTable      1.7      2016-10-19 CRAN (R 3.3.0)                   
+##  htmltools      0.3.6    2017-04-28 cran (@0.3.6)                    
+##  httr           1.3.1    2017-08-20 CRAN (R 3.3.2)                   
+##  intervals      0.15.1   2015-08-27 CRAN (R 3.3.0)                   
+##  jqr            1.0.0    2017-09-28 CRAN (R 3.3.2)                   
+##  jsonlite       1.5      2017-06-01 cran (@1.5)                      
+##  jsonvalidate   1.0.0    2016-06-13 CRAN (R 3.3.0)                   
+##  knitr          1.18.10  2018-01-28 Github (yihui/knitr@1bdaf39)     
+##  lattice        0.20-34  2016-09-06 CRAN (R 3.3.2)                   
+##  latticeExtra   0.6-28   2016-02-09 CRAN (R 3.3.0)                   
+##  lazyeval       0.2.0    2016-06-12 CRAN (R 3.3.0)                   
+##  lubridate      1.7.1    2017-11-03 CRAN (R 3.3.2)                   
+##  magrittr       1.5      2014-11-22 CRAN (R 3.3.0)                   
+##  maptools       0.8-40   2016-11-15 CRAN (R 3.3.2)                   
+##  MASS           7.3-45   2016-04-21 CRAN (R 3.3.2)                   
+##  Matrix         1.2-7.1  2016-09-01 CRAN (R 3.3.2)                   
+##  memoise        1.0.0    2016-01-29 CRAN (R 3.3.0)                   
+##  mnormt         1.5-5    2016-10-15 CRAN (R 3.3.0)                   
+##  modelr         0.1.1    2017-07-24 CRAN (R 3.3.2)                   
+##  munsell        0.4.3    2016-02-13 CRAN (R 3.3.0)                   
+##  nlme           3.1-128  2016-05-10 CRAN (R 3.3.2)                   
+##  nnet           7.3-12   2016-02-02 CRAN (R 3.3.2)                   
+##  openssl        0.9.5    2016-10-28 CRAN (R 3.3.0)                   
+##  pillar         1.1.0    2018-01-14 CRAN (R 3.3.2)                   
+##  pixmap         0.4-11   2011-07-19 CRAN (R 3.3.0)                   
+##  pkgconfig      2.0.1    2017-03-21 cran (@2.0.1)                    
+##  plotKML      * 0.5-8    2017-05-14 CRAN (R 3.3.2)                   
+##  plotrix        3.7      2017-12-07 CRAN (R 3.3.2)                   
+##  plyr           1.8.4    2016-06-08 CRAN (R 3.3.0)                   
+##  psych          1.7.3.21 2017-03-22 cran (@1.7.3.2)                  
+##  purrr        * 0.2.4    2017-10-18 CRAN (R 3.3.2)                   
+##  R6             2.2.2    2017-06-17 cran (@2.2.2)                    
+##  raster         2.5-8    2016-06-02 CRAN (R 3.3.0)                   
+##  RColorBrewer   1.1-2    2014-12-07 CRAN (R 3.3.0)                   
+##  Rcpp           0.12.13  2017-09-28 cran (@0.12.13)                  
+##  readr        * 1.1.1    2017-05-16 CRAN (R 3.3.2)                   
+##  readxl         1.0.0    2017-04-18 CRAN (R 3.3.2)                   
+##  reshape        0.8.6    2016-10-21 CRAN (R 3.3.0)                   
+##  reshape2       1.4.2    2016-10-22 CRAN (R 3.3.0)                   
+##  rgdal        * 1.2-5    2016-12-15 CRAN (R 3.3.2)                   
+##  rgeos          0.3-21   2016-10-20 CRAN (R 3.3.0)                   
+##  rlang          0.1.6    2017-12-21 CRAN (R 3.3.2)                   
+##  rmapshaper   * 0.3.0    2017-08-16 CRAN (R 3.3.2)                   
+##  rmarkdown      1.8      2017-11-17 cran (@1.8)                      
+##  rpart          4.1-10   2015-06-29 CRAN (R 3.3.2)                   
+##  rprojroot      1.3-2    2018-01-03 cran (@1.3-2)                    
+##  RSAGA          0.94-5   2016-01-05 CRAN (R 3.3.0)                   
+##  rstudioapi     0.7      2017-09-07 CRAN (R 3.3.2)                   
+##  rvest          0.3.2    2016-06-17 CRAN (R 3.3.0)                   
+##  scales         0.5.0    2017-08-24 cran (@0.5.0)                    
+##  shapefiles     0.7      2013-01-26 CRAN (R 3.3.0)                   
+##  sp           * 1.2-4    2016-12-22 CRAN (R 3.3.2)                   
+##  spacetime      1.2-1    2017-09-24 CRAN (R 3.3.2)                   
+##  stringi        1.1.5    2017-04-07 cran (@1.1.5)                    
+##  stringr      * 1.2.0    2017-02-18 cran (@1.2.0)                    
+##  survival       2.40-1   2016-10-30 CRAN (R 3.3.0)                   
+##  tibble       * 1.4.1    2017-12-25 CRAN (R 3.3.2)                   
+##  tidyr        * 0.7.2    2017-10-16 CRAN (R 3.3.2)                   
+##  tidyverse    * 1.2.1    2017-11-14 CRAN (R 3.3.2)                   
+##  V8             1.5      2017-04-25 CRAN (R 3.3.2)                   
+##  withr          1.0.2    2016-06-20 CRAN (R 3.3.0)                   
+##  xfun           0.1      2018-01-22 CRAN (R 3.3.2)                   
+##  XML            3.98-1.5 2016-11-10 CRAN (R 3.3.2)                   
+##  xml2           1.1.1    2017-01-24 CRAN (R 3.3.2)                   
+##  xts            0.9-7    2014-01-02 CRAN (R 3.3.0)                   
+##  yaml           2.1.16   2017-12-12 cran (@2.1.16)                   
+##  zoo            1.7-14   2016-12-16 CRAN (R 3.3.2)</code></pre>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-HenglRoudieretal2015">
+<p>Hengl, Tomislav, Pierre Roudier, Dylan Beaudette, and Edzer Pebesma. 2015. “plotKML: Scientific Visualization of Spatio-Temporal Data.” <em>Journal of Statistical Software</em> 63 (5): 1–25. <a href="http://www.jstatsoft.org/v63/i05/" class="uri">http://www.jstatsoft.org/v63/i05/</a>.</p>
+</div>
+<div id="ref-KahleWickham2013">
+<p>Kahle, David, and Hadley Wickham. 2013. “ggmap: Spatial Visualization with ggplot2.” <em>The R Journal</em> 5 (1): 144–61. <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
+</div>
+<div id="ref-LoecherRopkins2015">
+<p>Loecher, Markus, and Karl Ropkins. 2015. “RgoogleMaps and loa: Unleashing R Graphics Power on Map Tiles.” <em>Journal of Statistical Software</em> 63 (4): 1–18. <a href="http://www.jstatsoft.org/v63/i04/" class="uri">http://www.jstatsoft.org/v63/i04/</a>.</p>
+</div>
+<div id="ref-TeucherRussell2017">
+<p>Teucher, Andy, and Kenton Russell. 2017. <em>rmapshaper: Client for ’mapshaper’ for ’Geospatial’ Operations</em>. <a href="https://CRAN.R-project.org/package=rmapshaper" class="uri">https://CRAN.R-project.org/package=rmapshaper</a>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I choose to use <code>rgdal</code> instead of the <a href="https://cran.rstudio.com/web/packages/sf/"><code>sf</code></a> (simple features) package because <code>plotKML</code> plays better with sp-class objects.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
