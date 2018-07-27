@@ -1,0 +1,35 @@
+---
+title: Benchmarking Random Forest Algorithms
+author: Carl Frederick
+date: '2018-05-30'
+slug: benchmarking-random-forest-algorithms
+categories:
+  - R
+tags: []
+---
+
+## Packages
+
+### [From `caret` documentation](http://topepo.github.io/caret/available-models.html)
+
+  - randomForest
+  - ranger
+  - extraTrees
+  - obligueRF
+  - party
+  - quantregForest
+  - inTrees
+  - Rborist
+  - RRF
+  - wsrf
+  
+### [From Maching Learning taskview on CRAN](https://cran.r-project.org/view=MachineLearning)
+
+  - ipred
+  - randomForestSRC
+  - LogicForest
+  - RLT
+  - trtf
+  - grf
+  
+## Create realistic fake data for my case
