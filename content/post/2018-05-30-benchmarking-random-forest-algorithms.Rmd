@@ -6,6 +6,7 @@ slug: benchmarking-random-forest-algorithms
 categories:
   - R
 tags: []
+draft: true
 ---
 
 ## Packages
@@ -25,6 +26,8 @@ tags: []
   
 ### [From Maching Learning taskview on CRAN](https://cran.r-project.org/view=MachineLearning)
 
+parenthetical for now
+
   - ipred
   - randomForestSRC
   - LogicForest
@@ -32,4 +35,73 @@ tags: []
   - trtf
   - grf
   
-## Create realistic fake data for my case
+## Choosing some "Training" Data
+
+I will be using the `diamonds` data from the `ggplot2` package as some 
+surrogate training data. Since I am only interested in speed/object size I 
+don't need any test data. The `diamonds` data are similar in size (number of 
+rows, especially) to the data I am using. The next chunk will load those data 
+and all the relevant packages used in this post. I will also create a binary 
+variable, to mirror my particular use case.
+
+```{r setup, message = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(caret)
+})
+
+data("diamonds", package = "ggplot2")
+diamonds$price <- ifelse(diamonds$price > quantile(diamonds$price, probs = .7),
+                         "Expensive", "Regular")
+
+trCtrl <- trainControl(method = "repeatedcv", 
+                       number = 5, 
+                       repeats = 3, 
+                       savePredictions = FALSE, 
+                       classProbs = TRUE, 
+                       summaryFunction = twoClassSummary)
+```
+
+```{r rf}
+t.rf <- system.time({
+  mod1 <- train(price ~ .,
+                data = diamonds,
+                method = "rf", 
+                metric = "ROC", 
+                trControl = trCtrl, 
+                tuneLength = 5)
+})
+
+s.rf <- pryr::object_size(mod1)
+
+```
+
+
+```{r ranger}
+t.ranger <- system.time({
+  mod2 <- train(price ~ .,
+                data = diamonds,
+                method = "ranger", 
+                metric = "ROC", 
+                trControl = trCtrl, 
+                tuneLength = 5)
+})
+
+s.ranger <- pryr::object_size(mod2)
+
+```
+
+```{r Rborist}
+t.Rborist <- system.time({
+  mod3 <- train(price ~ .,
+                data = diamonds,
+                method = "Rborist", 
+                metric = "ROC", 
+                trControl = trCtrl, 
+                tuneLength = 5)
+})
+
+s.Rborist <- pryr::object_size(mod3)
+
+```
+
