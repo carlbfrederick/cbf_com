@@ -1,0 +1,136 @@
+---
+title: Concentration of Senate Representation
+author: Carl Frederick
+date: '2018-07-14'
+slug: concentration-of-senate-representation
+categories:
+  - R
+tags:
+  - data-viz
+  - politics
+description: ''
+featured: ''
+featuredalt: ''
+featuredpath: ''
+linktitle: ''
+---
+
+Recently saw this tweet `r htmltools::HTML("{{< tweet 1016789064379334656 >}}")` 
+and it reminded me of similar discussions I have had in which I was taking a 
+similar position. I know that the point of the Senate was to ensure that states 
+with large and small populations were on equal footing in one of the houses of
+the legislature. However, it seems to me that at some point the imbalance in 
+population size between states may outweigh the desire for numerical equality.
+Has the degree of inequality in Senate representation grown over time? *I will 
+leave the more intersting question about differential demographics for another 
+post.*
+
+Since the data are readily available, I decided to look into things to decide 
+how strongly I should argue this point in the future. 
+
+# Getting the data
+
+The [National Historic Geographic Information System](https://www.nhgis.org/)
+contains a wealth of data from the Census over time in a standardized, customizable 
+download extracts. To make things simple, I chose to download total population 
+figures by state from Decennial Censuses back to 1790.  
+
+```{r read data, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+stpop <- read_csv("ExternalData/nhgis0001_ts_nominal_state.csv") %>% 
+  select(year = YEAR, state = STATE, pop = A00AA) %>% 
+  filter(!grepl("Territory", state), 
+         !grepl("District", state), 
+         !grepl("Persons", state),
+         !grepl("Puerto Rico", state)) %>% 
+  group_by(year) %>% 
+  arrange(pop) %>% 
+  mutate(
+    cumSen = row_number(pop)/n(),
+    cumPop = cumsum(pop)/sum(pop)
+  ) %>% 
+  nest %>% 
+  arrange(year)
+```
+
+# Changes over time
+
+Since the number of Senators per state is constant across states and over time, 
+the question boils down to one of changing population over time. The best way I 
+can think of to answer this question is to look at summary measures of inequality
+that describe distributions. A suite of these measures are available in the 
+[`ineq` package](https://CRAN.R-project.org/package=ineq)--instead of income or 
+wealth distributions, we will be looking at population distributions. See the 
+help files (`?ineq::ineq`) for descriptions of what each of the measures is and
+for the relevant citations.
+
+```{r calculate ineq measures and plot trends, message = FALSE, warning = FALSE}
+library(ineq)
+
+stpop <- stpop %>% 
+  mutate(
+    nStates = map_dbl(data, nrow),
+    Gini = map_dbl(data, ~Gini(.$pop)),
+    RS = map_dbl(data, ~RS(.$pop)),
+    Atkinson = map_dbl(data, ~Atkinson(.$pop)),
+    Theil = map_dbl(data, ~Theil(.$pop)),
+    var.coeff = map_dbl(data, ~var.coeff(.$pop)),
+    entropy = map_dbl(data, ~entropy(.$pop))
+  ) %>% 
+  unnest
+
+stpop %>% 
+  gather(metric, value, Gini, RS, Atkinson, Theil, var.coeff, entropy) %>% 
+  group_by(year, metric, value) %>% 
+  summarize %>% 
+  ggplot(aes(x = year, y = value, color = metric)) + 
+    geom_point() +
+    geom_smooth(se=FALSE) + 
+    theme_minimal() + 
+    labs(x = "", y = "") + 
+    facet_wrap(~metric, scales = "free") + 
+    theme(legend.position = "none")
+```
+
+The scale of each of the metrics is irrelevant; the point is that each shows a 
+consistent and fairly linear increase over the history of the United 
+States. The obvious conclusion is that as the US has expanded its territory
+and grown in population, its population has also become relatively more 
+concentrated across states.
+
+Another way to look at this issue is to examine the cumulative distribution
+of state populations over time, or the Lorenz curves of share of population
+on the y-axis and share of senators on the x-axis. In lieu of 23 separate 
+plots, an interactive, plotly version is below. For reference, I have also
+included the value of the popular Gini coefficient for that year. The red
+line is represents what the distribution would look like if each state had
+an equal share of the total population. The farther the black curve is from
+the red line, the more unequally population is distributed across states.
+
+```{r interactive lorenz, message = FALSE, warning = FALSE}
+library(plotly)
+
+out <- stpop %>% 
+  ggplot(aes(x = cumSen, y = cumPop)) + 
+    geom_point(aes(frame = year)) + 
+    geom_line(aes(frame = year)) + 
+    geom_text(x = .20, y = .9, vjust = 0, hjust = 0, 
+              aes(label = paste("Year = ", year,  "\nGini = ", formatC(Gini, digits = 3, format = "f")),
+                  frame = year)) +
+    geom_line(data = data.frame(cumSen = c(0,1), cumPop = c(0,1)), color = "red") + 
+    scale_x_continuous(labels = scales::percent) +     
+    scale_y_continuous(labels = scales::percent) + 
+    theme_minimal() + 
+    labs(y = "Cumulative Population", x = "Cumulative Senators") 
+
+ggplotly(out, tooltip = NULL)
+```
+
+This post doesn't fully address the implications of @NormOrnstein's point: I 
+don't do any forecasting and don't disaggregate anything by race or
+other predictors of party identification, but I think it is interesting to 
+think about whether and at what point the reality of where people live
+overcome whatever benefits may have come from a legislative body that divides
+power equally across arbitrarily chosen geographic divisions. At what point 
+does this violate the basic **one person, one vote** premise of democracy?
